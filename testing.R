@@ -1,4 +1,5 @@
-source("/Users/despina/Dropbox/beta-model-for-hypergraphs/R Code/beta-hypergraphs.R")
+source("beta-hypergraphs.R")
+
 # Test 1 - Complete 3-uniform graph on 5 vertices
 K53 = list(c(1,2,3), c(1,2,4), c(1,2,5), c(1,3,4), c(1,3,5), c(1,4,5), c(2,3,4), c(2,3,5), c(2,4,5), c(3,4,5) )
 Get.Degree.Sequence(K53)
