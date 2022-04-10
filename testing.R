@@ -1,16 +1,16 @@
 source("beta-hypergraphs.R")
 
 # Test 1 - Complete 3-uniform graph on 5 vertices
-K53 = list(c(1,2,3), c(1,2,4), c(1,2,5), c(1,3,4), c(1,3,5), c(1,4,5), c(2,3,4), c(2,3,5), c(2,4,5), c(3,4,5) )
+## K53 = list(c(1,2,3), c(1,2,4), c(1,2,5), c(1,3,4), c(1,3,5), c(1,4,5), c(2,3,4), c(2,3,5), c(2,4,5), c(3,4,5) )
 
-print(Get.Degree.Sequence(K53))
+## print(Get.Degree.Sequence(K53))
 ## [1] 6 6 6 6 6
-runtimeK53 = system.time(beta.K53<-Estimate.Beta.Fixed.Point(degrees=Get.Degree.Sequence(K53), k=3, max.iter=10000))
+## runtimeK53 = system.time(beta.K53<-Estimate.Beta.Fixed.Point(degrees=Get.Degree.Sequence(K53), k=3, max.iter=10000))
 ## ## [1] 3331 # num iterations until convergence
 ## ## [1] 9.997254e-05 # max difference in old.beta-new.beta between iterations
 ## ##    user  system elapsed
 ## ##   2.488   0.010   2.521
-beta.K53
+## beta.K53
 ## [1] 3.070288 3.070288 3.070288 3.070288 3.070288
 ## ================================================
 # Test 2 - 5 vertices 7 edges
@@ -58,16 +58,16 @@ beta.K53
 ## system.time(beta10.3 <- Estimate.Beta.Fixed.Point(d10.3, k=3, max.iter = 10000))
 
 
-## d10.3 = c(36, 36, 36, 36, 36, 36, 36, 36, 36, 36)
+d10.3 = c(36, 36, 36, 36, 36, 36, 36, 36, 36, 36)
 
 ## converges very fast: 20 secs
 ## [1] 3331 #num iterations
 ## [1] 9.997254e-05 # tolerance for convergence
 ##    user  system elapsed
 ##  20.225   0.105  20.950
-## beta10.3 = c(3.070288, 3.070288, 3.070288, 3.070288, 3.070288, 3.070288, 3.070288 3.070288, 3.070288, 3.070288)
+beta10.3 = c(3.070288, 3.070288, 3.070288, 3.070288, 3.070288, 3.070288, 3.070288, 3.070288, 3.070288, 3.070288)
 ## # NOTE that beta_i=3 in the case is equivalent to beta_i = infinity.
-## Estimate.Beta.Fixed.Point.General.Case(d10.3, k.list=list(3), max.iter= 10000, tol=0.0001)
+Estimate.Beta.Fixed.Point.General.Case(d10.3, k.list=list(3), max.iter= 10000, tol=0.0001)
 ## [1] 3331
 ## [1] 9.997254e-05
 ##  [1] 3.070288 3.070288 3.070288 3.070288 3.070288 3.070288 3.070288 3.070288 3.070288 3.070288
