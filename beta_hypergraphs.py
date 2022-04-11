@@ -122,8 +122,7 @@ def fixed_point_general(degrees, k_list, max_iter=500, tol=0.0001, beta=None):
                 sets = all_index_sets[index_k]
                 prod_exp_beta = prod_exp_beta_list[index_k]
                 for j in range(len(sets)):
-                    tup = sets[j]
-                    if i not in tup:
+                    if i not in sets[j]:
                         sum_q_beta[index_k] += (
                             prod_exp_beta[j]
                             / (1 + prod_exp_beta[j] * exp_beta[i])
