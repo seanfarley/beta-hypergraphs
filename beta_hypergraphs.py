@@ -21,7 +21,7 @@ def deg_seq(hyperedges, vertices=None):
     return d
 
 
-def beta_fixed_point_R(degrees, k, max_iter=500, tol=0.0001, beta=None):
+def beta_fixed_point_R(degrees, k, sets, max_iter=500, tol=0.0001, beta=None):
     """Use a fixed point algorithm to calculate the MLE."""
     n = len(degrees)
     if beta is None:
@@ -32,7 +32,7 @@ def beta_fixed_point_R(degrees, k, max_iter=500, tol=0.0001, beta=None):
 
     # There are more efficient methods for calculating e^{beta_S} for each S in
     # n\choose k-1, e.g using a dynamic algorithm
-    sets = list(itertools.combinations(range(n), k - 1))
+    # sets = list(itertools.combinations(range(n), k - 1))
     prod_beta = np.ones(len(sets))
 
     while(not convergence and steps < max_iter):
@@ -79,7 +79,7 @@ def beta_fixed_point_R(degrees, k, max_iter=500, tol=0.0001, beta=None):
     return beta
 
 
-def beta_fixed_point(degrees, k, max_iter=500, tol=0.0001, beta=None):
+def beta_fixed_point(degrees, k, sets, max_iter=500, tol=0.0001, beta=None):
     """Use a fixed point algorithm to calculate the MLE."""
     n = len(degrees)
     if beta is None:
@@ -90,7 +90,7 @@ def beta_fixed_point(degrees, k, max_iter=500, tol=0.0001, beta=None):
 
     # There are more efficient methods for calculating e^{beta_S} for each S in
     # n\choose k-1, e.g using a dynamic algorithm
-    sets = list(itertools.combinations(range(n), k - 1))
+    # sets = np.asarray(list(itertools.combinations(range(n), k - 1)))
     prod_beta = np.ones(len(sets))
 
     while(not convergence and steps < max_iter):
@@ -202,28 +202,35 @@ def fixed_point_general(degrees, k_list, max_iter=500, tol=0.0001, beta=None):
 
 def main():
     # for correctness
-    K53 = list(itertools.combinations([1, 2, 3, 4, 5], 3))
-    beta_K53 = beta_fixed_point(deg_seq(K53), k=3, max_iter=10000)
+    k = 3
+    K53 = list(itertools.combinations(range(5), k))
+    degs = deg_seq(K53)
+    sets = list(itertools.combinations(range(len(degs)), k - 1))
+
+    beta_K53 = beta_fixed_point(degs, k=k, sets=sets, max_iter=10000)
     print(np.isclose(beta_K53, 3.07028833 * np.ones(5)))
 
     # for performance
-    K53 = list(itertools.combinations(range(25), 3))
+    n = 25
+    Kn53 = list(itertools.combinations(range(n), 3))
+    degs = deg_seq(Kn53)
+    sets = list(itertools.combinations(range(len(degs)), k - 1))
 
-    print("Running R-converted code (with n=25)")
+    print(f"Running R-converted code (with n={n})")
     tic = time.perf_counter()
-    beta_K53 = beta_fixed_point_R(deg_seq(K53), k=3, max_iter=10000)
+    beta_fixed_point_R(degs, k=k, sets=sets, max_iter=10000)
     toc = time.perf_counter()
     print(f"beta_fixed_point_R took {toc - tic:0.4f} seconds")
 
-    # print(beta_K53)
+    # print(beta_Kn53)
 
-    print("Running python vectorized code (with n=25)")
+    print(f"Running python vectorized code (with n={n})")
     tic = time.perf_counter()
-    beta_K53 = beta_fixed_point(deg_seq(K53), k=3, max_iter=10000)
+    beta_fixed_point(degs, k=3, sets=sets, max_iter=10000)
     toc = time.perf_counter()
     print(f"beta_fixed_point took {toc - tic:0.4f} seconds")
 
-    # print(beta_K53)
+    # print(beta_Kn53)
 
     # d10_3 = (36, 36, 36, 36, 36, 36, 36, 36, 36, 36)
 
