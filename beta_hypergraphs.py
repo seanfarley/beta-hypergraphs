@@ -3,6 +3,7 @@
 import itertools
 import time
 
+import numba as nb
 import numpy as np
 
 
@@ -230,7 +231,14 @@ def main():
     toc = time.perf_counter()
     print(f"beta_fixed_point took {toc - tic:0.4f} seconds")
 
-    # print(beta_Kn53)
+    njit_fp = nb.njit(beta_fixed_point)
+    njit_sets = np.asarray(sets)
+
+    print(f"Running python jit'd code (with n={n})")
+    tic = time.perf_counter()
+    njit_fp(degs, k=3, sets=njit_sets, max_iter=10000)
+    toc = time.perf_counter()
+    print(f"beta_fixed_point jit'd took {toc - tic:0.4f} seconds")
 
     # d10_3 = (36, 36, 36, 36, 36, 36, 36, 36, 36, 36)
 
