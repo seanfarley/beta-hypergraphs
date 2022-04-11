@@ -40,11 +40,15 @@ def beta_fixed_point(degrees, k, max_iter=500, tol=0.0001, beta=None):
         if any(np.isinf(old_beta)):
             return None
 
-        for i in range(len(sets)):
-            prod_beta[i] = np.prod([exp_beta[i] for i in sets[i]])
-            if np.isinf(prod_beta[i]):
-                print("Infinite beta")
-                return
+        # for i in range(len(sets)):
+        #     prod_beta[i] = np.prod([exp_beta[i] for i in sets[i]])
+
+        for i, s in enumerate(sets):
+            prod_beta[i] = np.prod(exp_beta[np.asarray(s)])
+
+        if any(np.isinf(prod_beta)):
+            print("Infinite beta")
+            return
 
         for i in range(n):
             # sum_q = 0
