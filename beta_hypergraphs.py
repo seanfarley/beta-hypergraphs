@@ -61,8 +61,8 @@ def beta_fixed_point(degrees, k, max_iter=500, tol=0.0001, beta=None):
             beta[i] = np.log(degrees[i]) - np.log(sum_q)
 
         diff = max(abs(old_beta - beta))
-        print(f"diff= {diff} -------- steps= {steps}")
-        print(beta)
+        # print(f"diff= {diff} -------- steps= {steps}")
+        # print(beta)
         if diff < tol:
             convergence = True
 
