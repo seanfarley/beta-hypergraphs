@@ -108,9 +108,8 @@ def fixed_point_general(degrees, k_list, max_iter=500, tol=0.0001, beta=None):
         for index_k in range(len(k_list)):
             sets = all_index_sets[index_k]
             prod_exp_beta = prod_exp_beta_list[index_k]
-            for t in range(len(sets)):
-                tup = sets[t]
-                prod_exp_beta[t] = np.prod([exp_beta[tt] for tt in tup])
+            for t, s in enumerate(sets):
+                prod_exp_beta[t] = np.prod([exp_beta[tt] for tt in s])
                 if np.isinf(prod_exp_beta[t]):
                     print("Infinite beta")
                     return
