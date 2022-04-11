@@ -25,7 +25,6 @@ def beta_fixed_point_R(degrees, k, max_iter=500, tol=0.0001, beta=None):
     if beta is None:
         beta = np.zeros(n)
 
-    print(np.exp(beta))
     convergence = False
     steps = 0
 
@@ -69,8 +68,8 @@ def beta_fixed_point_R(degrees, k, max_iter=500, tol=0.0001, beta=None):
 
         steps += 1
 
-    print(steps)
-    print(diff)
+    # print(steps)
+    # print(diff)
 
     if steps == max_iter:
         return
@@ -84,7 +83,6 @@ def beta_fixed_point(degrees, k, max_iter=500, tol=0.0001, beta=None):
     if beta is None:
         beta = np.zeros(n)
 
-    print(np.exp(beta))
     convergence = False
     steps = 0
 
@@ -123,8 +121,8 @@ def beta_fixed_point(degrees, k, max_iter=500, tol=0.0001, beta=None):
 
         steps += 1
 
-    print(steps)
-    print(diff)
+    # print(steps)
+    # print(diff)
 
     if steps == max_iter:
         return
@@ -191,8 +189,8 @@ def fixed_point_general(degrees, k_list, max_iter=500, tol=0.0001, beta=None):
             convergence = True
 
         steps += 1
-    print(steps)
-    print(diff)
+    # print(steps)
+    # print(diff)
     if steps == max_iter:
         print("Max iterations reached")
         return
