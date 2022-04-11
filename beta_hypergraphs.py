@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import itertools
+import time
+
 import numpy as np
 
 
@@ -199,15 +201,34 @@ def fixed_point_general(degrees, k_list, max_iter=500, tol=0.0001, beta=None):
 
 
 def main():
-    # K53 = list(itertools.combinations([1, 2, 3, 4, 5], 3))
-    # print(deg_seq(K53))
-    # beta_K53 = beta_fixed_point(deg_seq(K53), k=3, max_iter=10000)
-    # print(np.isclose(beta_K53, 3.07028833 * np.ones(5)))
+    # for correctness
+    K53 = list(itertools.combinations([1, 2, 3, 4, 5], 3))
+    beta_K53 = beta_fixed_point(deg_seq(K53), k=3, max_iter=10000)
+    print(np.isclose(beta_K53, 3.07028833 * np.ones(5)))
 
-    d10_3 = (36, 36, 36, 36, 36, 36, 36, 36, 36, 36)
+    # for performance
+    K53 = list(itertools.combinations(range(25), 3))
 
-    beta = fixed_point_general(d10_3, [3, ], max_iter=10000)
-    print(beta)
+    print("Running R-converted code (with n=25)")
+    tic = time.perf_counter()
+    beta_K53 = beta_fixed_point_R(deg_seq(K53), k=3, max_iter=10000)
+    toc = time.perf_counter()
+    print(f"beta_fixed_point_R took {toc - tic:0.4f} seconds")
+
+    # print(beta_K53)
+
+    print("Running python vectorized code (with n=25)")
+    tic = time.perf_counter()
+    beta_K53 = beta_fixed_point(deg_seq(K53), k=3, max_iter=10000)
+    toc = time.perf_counter()
+    print(f"beta_fixed_point took {toc - tic:0.4f} seconds")
+
+    # print(beta_K53)
+
+    # d10_3 = (36, 36, 36, 36, 36, 36, 36, 36, 36, 36)
+
+    # beta = fixed_point_general(d10_3, [3, ], max_iter=10000)
+    # print(beta)
 
     # [3.07028833 3.07028833 3.07028833 3.07028833 3.07028833 3.07028833
     #  3.07028833 3.07028833 3.07028833 3.07028833]
