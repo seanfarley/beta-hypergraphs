@@ -352,6 +352,14 @@ def main():
     # 3331
     # 9.997253637461512e-05
 
+    # njit_fpg = nb.njit(fixed_point_general)
+
+    # print(f"Running python jit'd code (with n={n})")
+    # tic = time.perf_counter()
+    # njit_fpg(d10_3, k_list, all_index_sets, max_iter=10000)
+    # toc = time.perf_counter()
+    # print(f"beta_fixed_point jit'd took {toc - tic:0.4f} seconds")
+
 
 if __name__ == "__main__":
     main()
