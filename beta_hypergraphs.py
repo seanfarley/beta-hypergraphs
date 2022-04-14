@@ -227,32 +227,59 @@ def fixed_point_general(degrees, k_list, max_iter=500, tol=0.0001, beta=None):
             print("Infinite beta")
             return
 
-        for index_k in range(len(k_list)):
-            sets = all_index_sets[index_k]
-            prod_exp_beta = prod_exp_beta_list[index_k]
-            for t, s in enumerate(sets):
-                prod_exp_beta[t] = np.prod([exp_beta[tt] for tt in s])
-                if np.isinf(prod_exp_beta[t]):
-                    print("Infinite beta")
-                    return
+        # for index_k in range(len(k_list)):
+        #     sets = all_index_sets[index_k]
+        #     prod_exp_beta = prod_exp_beta_list[index_k]
+        #     for t, s in enumerate(sets):
+        #         prod_exp_beta[t] = np.prod(exp_beta[np.asarray(s)])
 
-            prod_exp_beta_list[index_k] = prod_exp_beta
+        #     if np.any(np.isinf(prod_exp_beta)):
+        #         print("Infinite beta")
+        #         return
+
+        #     prod_exp_beta_list[index_k] = prod_exp_beta
+
+        ns = np.asarray(all_index_sets)
+        prod_exp_beta_list = np.prod(exp_beta[ns], axis=2)
 
         for i in range(n):
-            sum_q_beta = list(range(len(k_list)))
-            for index_k in range(len(k_list)):
-                sets = all_index_sets[index_k]
-                prod_exp_beta = prod_exp_beta_list[index_k]
-                for j in range(len(sets)):
-                    if i not in sets[j]:
-                        sum_q_beta[index_k] += (
-                            prod_exp_beta[j]
-                            / (1 + prod_exp_beta[j] * exp_beta[i])
-                        )
-                        if np.isinf(sum_q_beta[index_k]):
-                            print("Infinite beta")
-                            return
-            beta[i] = np.log(degrees[i]) - np.log(np.sum(sum_q_beta))
+            k_ind = range(len(k_list))
+            ind = list(k_ind)
+
+            # sum_q_beta = list(k_ind)
+            # for index_k in k_ind:
+            #     sets = all_index_sets[index_k]
+            #     prod_exp_beta = prod_exp_beta_list[index_k]
+
+            #     ind[index_k] = np.array([j for j in range(len(sets))
+            #                              if i not in sets[j]])
+
+            #     # for j in range(len(sets)):
+            #     #     if i not in sets[j]:
+            #     #         sum_q_beta[index_k] += (
+            #     #             prod_exp_beta[j]
+            #     #             / (1 + prod_exp_beta[j] * exp_beta[i])
+            #     #         )
+
+            #     sum_q_beta[index_k] = np.sum(
+            #         prod_exp_beta[ind[index_k]]
+            #         /
+            #         (1 + prod_exp_beta[ind[index_k]] * exp_beta[i])
+            #     )
+            #     if np.isinf(sum_q_beta[index_k]):
+            #         print("Infinite beta")
+            #         return
+
+            # creates an "index" array
+            for index_k in k_ind:
+                ind[index_k] = np.array([j for j in range(len(sets))
+                                         if i not in sets[j]])
+            sum_q_beta = np.sum(
+                prod_exp_beta_list[k_ind, ind]
+                /
+                (1 + prod_exp_beta_list[k_ind, ind] * exp_beta[i])
+            )
+            beta[i] = np.log(degrees[i]) - np.log(sum_q_beta)
 
         diff = max(abs(old_beta - beta))
         # print(f"diff= {diff} -------- steps= {steps}")
@@ -309,10 +336,13 @@ def main():
     toc = time.perf_counter()
     print(f"beta_fixed_point jit'd took {toc - tic:0.4f} seconds")
 
-    # d10_3 = (36, 36, 36, 36, 36, 36, 36, 36, 36, 36)
+    d10_3 = (36, 36, 36, 36, 36, 36, 36, 36, 36, 36)
 
-    # beta = fixed_point_general(d10_3, [3, ], max_iter=10000)
-    # print(beta)
+    print(f"Running python vectorized code (with n={len(d10_3)})")
+    tic = time.perf_counter()
+    fixed_point_general(d10_3, [3, ], max_iter=10000)
+    toc = time.perf_counter()
+    print(f"fixed_point_general took {toc - tic:0.4f} seconds")
 
     # [3.07028833 3.07028833 3.07028833 3.07028833 3.07028833 3.07028833
     #  3.07028833 3.07028833 3.07028833 3.07028833]
