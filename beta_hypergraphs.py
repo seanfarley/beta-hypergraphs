@@ -202,7 +202,8 @@ def fixed_point_general_R(degrees, k_list, max_iter=500, tol=0.0001,
     return beta
 
 
-def fixed_point_general(degrees, k_list, max_iter=500, tol=0.0001, beta=None):
+def fixed_point_general(degrees, k_list, all_index_sets, max_iter=500,
+                        tol=0.0001, beta=None):
     """Use a fixed point algorithm to get the MLE."""
     n = len(degrees)
     if beta is None:
@@ -211,19 +212,16 @@ def fixed_point_general(degrees, k_list, max_iter=500, tol=0.0001, beta=None):
     convergence = False
     steps = 0
 
-    all_index_sets = list()
-    index_k = 0
     prod_exp_beta_list = list()
-    for k in k_list:
-        index_k += 1
-        sets = list(itertools.combinations(range(n), k - 1))
-        all_index_sets.append(sets)
-        prod_exp_beta_list.append(np.ones(len(sets)))
+    for s in all_index_sets:
+        prod_exp_beta_list.append(np.ones(len(s)))
+
+    ns = np.asarray(all_index_sets)
 
     while (not convergence and steps < max_iter):
         exp_beta = np.exp(beta)
         old_beta = beta.copy()
-        if any(np.isinf(old_beta)):
+        if np.any(np.isinf(old_beta)):
             print("Infinite beta")
             return
 
@@ -239,7 +237,6 @@ def fixed_point_general(degrees, k_list, max_iter=500, tol=0.0001, beta=None):
 
         #     prod_exp_beta_list[index_k] = prod_exp_beta
 
-        ns = np.asarray(all_index_sets)
         prod_exp_beta_list = np.prod(exp_beta[ns], axis=2)
 
         for i in range(n):
@@ -337,10 +334,16 @@ def main():
     print(f"beta_fixed_point jit'd took {toc - tic:0.4f} seconds")
 
     d10_3 = (36, 36, 36, 36, 36, 36, 36, 36, 36, 36)
+    n = len(d10_3)
+    k_list = [3, ]
+    all_index_sets = []
+    for k in k_list:
+        sets = list(itertools.combinations(range(n), k - 1))
+        all_index_sets.append(sets)
 
-    print(f"Running python vectorized code (with n={len(d10_3)})")
+    print(f"Running python vectorized code (with n={n})")
     tic = time.perf_counter()
-    fixed_point_general(d10_3, [3, ], max_iter=10000)
+    fixed_point_general(d10_3, k_list, all_index_sets, max_iter=10000)
     toc = time.perf_counter()
     print(f"fixed_point_general took {toc - tic:0.4f} seconds")
 
