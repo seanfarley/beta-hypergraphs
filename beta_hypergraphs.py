@@ -6,6 +6,8 @@ import time
 import numba as nb
 import numpy as np
 
+from numba.typed import List
+
 
 def deg_seq(hyperedges, vertices=None):
     """Get the sequence of degrees."""
@@ -294,6 +296,72 @@ def fixed_point_general(degrees, k_list, all_index_sets, max_iter=500,
     return beta
 
 
+@nb.njit
+def fixed_point_general_jit(degrees, k_list, all_index_sets, max_iter=500,
+                            tol=0.0001, beta=None):
+    """Use a fixed point algorithm to get the MLE."""
+    n = len(degrees)
+    if beta is None:
+        beta = np.zeros(n)
+
+    convergence = False
+    steps = 0
+
+    prod_exp_beta_list = List([np.ones(len(s)) for s in all_index_sets])
+
+    while (not convergence and steps < max_iter):
+        exp_beta = np.exp(beta)
+        old_beta = beta.copy()
+        if np.any(np.isinf(old_beta)):
+            print("Infinite beta")
+            return
+
+        for index_k in range(len(k_list)):
+            sets = all_index_sets[index_k]
+            prod_exp_beta = prod_exp_beta_list[index_k]
+            for t, s in enumerate(sets):
+                prod_exp_beta[t] = np.prod(exp_beta[np.asarray(s)])
+
+            if np.any(np.isinf(prod_exp_beta)):
+                print("Infinite beta")
+                return
+
+            prod_exp_beta_list[index_k] = prod_exp_beta
+
+        # prod_exp_beta_list = np.prod(exp_beta[ns], axis=2)
+
+        for i in range(n):
+            sum_q_beta = np.zeros(len(k_list))
+            for index_k in range(len(k_list)):
+                sets = all_index_sets[index_k]
+                prod_exp_beta = prod_exp_beta_list[index_k]
+                for j in range(len(sets)):
+                    if i not in sets[j]:
+                        sum_q_beta[index_k] += (
+                            prod_exp_beta[j]
+                            / (1 + prod_exp_beta[j] * exp_beta[i])
+                        )
+                        if np.isinf(sum_q_beta[index_k]):
+                            print("Infinite beta")
+                            return
+            beta[i] = np.log(degrees[i]) - np.log(np.sum(sum_q_beta))
+
+        diff = np.max(np.abs(old_beta - beta))
+        # print(f"diff= {diff} -------- steps= {steps}")
+        # print(beta)
+        if diff < tol:
+            convergence = True
+
+        steps += 1
+    # print(steps)
+    # print(diff)
+    if steps == max_iter:
+        print("Max iterations reached")
+        return
+
+    return beta
+
+
 def main():
     # for correctness
     k = 3
@@ -351,14 +419,16 @@ def main():
     #  3.07028833 3.07028833 3.07028833 3.07028833]
     # 3331
     # 9.997253637461512e-05
+    all_index_sets = List()
+    for k in k_list:
+        sets = List(itertools.combinations(range(n), k - 1))
+        all_index_sets.append(sets)
 
-    # njit_fpg = nb.njit(fixed_point_general)
-
-    # print(f"Running python jit'd code (with n={n})")
-    # tic = time.perf_counter()
-    # njit_fpg(d10_3, k_list, all_index_sets, max_iter=10000)
-    # toc = time.perf_counter()
-    # print(f"beta_fixed_point jit'd took {toc - tic:0.4f} seconds")
+    print(f"Running python jit'd code (with n={n})")
+    tic = time.perf_counter()
+    fixed_point_general_jit(d10_3, List(k_list), all_index_sets, max_iter=10000)
+    toc = time.perf_counter()
+    print(f"beta_fixed_point jit'd took {toc - tic:0.4f} seconds")
 
 
 if __name__ == "__main__":
