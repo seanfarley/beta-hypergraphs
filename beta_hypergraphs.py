@@ -148,8 +148,8 @@ def beta_fixed_point(degrees, k, sets, max_iter=500, tol=0.0001, beta=None):
     return beta
 
 
-def fixed_point_general_R(degrees, k_list, max_iter=500, tol=0.0001,
-                          beta=None):
+def fixed_point_general_R(degrees, k_list, all_index_sets, max_iter=500,
+                          tol=0.0001, beta=None):
     """Use a fixed point algorithm to get the MLE."""
     n = len(degrees)
     if beta is None:
@@ -158,19 +158,14 @@ def fixed_point_general_R(degrees, k_list, max_iter=500, tol=0.0001,
     convergence = False
     steps = 0
 
-    all_index_sets = list()
-    index_k = 0
-    prod_exp_beta_list = list()
-    for k in k_list:
-        index_k += 1
-        sets = list(itertools.combinations(range(n), k - 1))
-        all_index_sets.append(sets)
-        prod_exp_beta_list.append(np.ones(len(sets)))
+    prod_exp_beta_list = List()
+    for s in all_index_sets:
+        prod_exp_beta_list.append(np.ones(len(s)))
 
     while (not convergence and steps < max_iter):
         exp_beta = np.exp(beta)
         old_beta = beta.copy()
-        if any(np.isinf(old_beta)):
+        if np.any(np.isinf(old_beta)):
             print("Infinite beta")
             return
 
@@ -187,7 +182,7 @@ def fixed_point_general_R(degrees, k_list, max_iter=500, tol=0.0001,
             prod_exp_beta_list[index_k] = prod_exp_beta
 
         for i in range(n):
-            sum_q_beta = list(range(len(k_list)))
+            sum_q_beta = np.zeros(len(k_list))
             for index_k in range(len(k_list)):
                 sets = all_index_sets[index_k]
                 prod_exp_beta = prod_exp_beta_list[index_k]
@@ -202,7 +197,7 @@ def fixed_point_general_R(degrees, k_list, max_iter=500, tol=0.0001,
                             return
             beta[i] = np.log(degrees[i]) - np.log(np.sum(sum_q_beta))
 
-        diff = max(abs(old_beta - beta))
+        diff = np.max(np.abs(old_beta - beta))
         # print(f"diff= {diff} -------- steps= {steps}")
         # print(beta)
         if diff < tol:
@@ -427,6 +422,12 @@ def main():
     for k in k_list:
         sets = list(itertools.combinations(range(n), k - 1))
         all_index_sets.append(sets)
+
+    print(f"Running python R-converted code (with n={n})")
+    tic = time.perf_counter()
+    fixed_point_general_R(d10_3, List(k_list), all_index_sets, max_iter=10000)
+    toc = time.perf_counter()
+    print(f"fixed_point_general_R took {toc - tic:0.4f} seconds")
 
     print(f"Running python vectorized code (with n={n})")
     tic = time.perf_counter()
