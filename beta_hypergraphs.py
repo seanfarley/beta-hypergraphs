@@ -364,10 +364,11 @@ def fixed_point_general_jit(degrees, k_list, all_index_sets, max_iter=500,
 
 def main():
     # for correctness
+    n = 5
     k = 3
-    K53 = list(itertools.combinations(range(5), k))
+    K53 = list(itertools.combinations(range(n), k))
     degs = deg_seq(K53)
-    sets = list(itertools.combinations(range(len(degs)), k - 1))
+    sets = List(itertools.combinations(range(len(degs)), k - 1))
 
     beta_K53 = beta_fixed_point(degs, k=k, sets=sets, max_iter=10000)
     print(np.isclose(beta_K53, 3.07028833 * np.ones(5)))
