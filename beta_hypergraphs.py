@@ -178,7 +178,8 @@ def fixed_point_general_R(degrees, k_list, max_iter=500, tol=0.0001,
             sets = all_index_sets[index_k]
             prod_exp_beta = prod_exp_beta_list[index_k]
             for t, s in enumerate(sets):
-                prod_exp_beta[t] = np.prod([exp_beta[tt] for tt in s])
+                eba = np.array([exp_beta[tt] for tt in s])
+                prod_exp_beta[t] = np.prod(eba)
                 if np.isinf(prod_exp_beta[t]):
                     print("Infinite beta")
                     return
