@@ -444,11 +444,13 @@ def main():
         sets = List(itertools.combinations(range(n), k - 1))
         all_index_sets.append(sets)
 
+    fpg_njit = nb.njit(fixed_point_general_R)
+
     print(f"Running python jit'd code (with n={n})")
     tic = time.perf_counter()
-    fixed_point_general_jit(d10_3, List(k_list), all_index_sets, max_iter=10000)
+    fpg_njit(d10_3, List(k_list), all_index_sets, max_iter=10000)
     toc = time.perf_counter()
-    print(f"beta_fixed_point jit'd took {toc - tic:0.4f} seconds")
+    print(f"fixed_point_general_R jit'd took {toc - tic:0.4f} seconds")
 
 
 if __name__ == "__main__":
