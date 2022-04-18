@@ -41,11 +41,11 @@ def beta_fixed_point_R(degrees, k, sets, max_iter=500, tol=0.0001, beta=None):
     while(not convergence and steps < max_iter):
         exp_beta = np.exp(beta)
         old_beta = beta.copy()
-        if any(np.isinf(old_beta)):
+        if np.any(np.isinf(old_beta)):
             return None
 
         for i in range(len(sets)):
-            prod_beta[i] = np.prod([exp_beta[i] for i in sets[i]])
+            prod_beta[i] = np.prod(np.array([exp_beta[i] for i in sets[i]]))
 
             if np.isinf(prod_beta[i]):
                 print("Infinite beta")
@@ -65,7 +65,7 @@ def beta_fixed_point_R(degrees, k, sets, max_iter=500, tol=0.0001, beta=None):
 
             beta[i] = np.log(degrees[i]) - np.log(sum_q)
 
-        diff = max(abs(old_beta - beta))
+        diff = np.max(np.abs(old_beta - beta))
         # print(f"diff= {diff} -------- steps= {steps}")
         # print(beta)
         if diff < tol:
