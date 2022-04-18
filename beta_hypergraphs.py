@@ -107,21 +107,28 @@ def beta_fixed_point(degrees, k, sets, max_iter=500, tol=0.0001, beta=None):
         if np.any(np.isinf(old_beta)):
             return None
 
-        for i, s in enumerate(sets):
-            prod_beta[i] = np.prod(exp_beta[np.asarray(s)])
+        # for i, s in enumerate(sets):
+        #     prod_beta[i] = np.prod(exp_beta[np.asarray(s)])
+        prod_beta = np.prod(exp_beta[sets], axis=1)
 
         if np.any(np.isinf(prod_beta)):
             print("Infinite beta")
             return
 
-        for i in range(n):
-            ind = np.array([j for j in range(len(sets)) if i not in sets[j]])
-            sum_q = np.sum(prod_beta[ind] / (1 + prod_beta[ind] * exp_beta[i]))
-            if np.isinf(sum_q):
-                print("Infinite beta")
-                return
+        # for i in range(n):
+        #     ind = np.array([j for j in range(len(sets)) if i not in sets[j]])
+        #     sum_q = np.sum(prod_beta[ind] / (1 + prod_beta[ind] * exp_beta[i]))
+        #     if np.isinf(sum_q):
+        #         print("Infinite beta")
 
-            beta[i] = np.log(degrees[i]) - np.log(sum_q)
+        sum_q = np.sum(prod_beta[ind] / (1 + (prod_beta[ind].T * exp_beta).T),
+                       axis=1)
+
+        if np.any(np.isinf(sum_q)):
+            print("Infinite beta")
+            return
+
+        beta = np.log(degrees) - np.log(sum_q)
 
         diff = np.max(np.abs(old_beta - beta))
         # print(f"diff= {diff} -------- steps= {steps}")
