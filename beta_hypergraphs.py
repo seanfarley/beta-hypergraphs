@@ -413,7 +413,7 @@ def main():
     tic = time.perf_counter()
     fp_njit(degs, k=3, sets=sets, max_iter=10000)
     toc = time.perf_counter()
-    print(f"beta_fixed_point jit'd took {toc - tic:0.4f} seconds")
+    print(f"beta_fixed_point_R jit'd took {toc - tic:0.4f} seconds")
 
     d10_3 = (36, 36, 36, 36, 36, 36, 36, 36, 36, 36)
     n = len(d10_3)
