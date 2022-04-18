@@ -85,6 +85,9 @@ def beta_fixed_point_R(degrees, k, sets, max_iter=500, tol=0.0001, beta=None):
 def beta_fixed_point(degrees, k, sets, max_iter=500, tol=0.0001, beta=None):
     """Use a fixed point algorithm to calculate the MLE."""
     n = len(degrees)
+    sn = len(sets)
+    an = np.arange(n)
+    asn = np.arange(sn)
     if beta is None:
         beta = np.zeros(n)
 
@@ -94,7 +97,9 @@ def beta_fixed_point(degrees, k, sets, max_iter=500, tol=0.0001, beta=None):
     # There are more efficient methods for calculating e^{beta_S} for each S in
     # n\choose k-1, e.g using a dynamic algorithm
     # sets = np.asarray(list(itertools.combinations(range(n), k - 1)))
-    prod_beta = np.ones(len(sets))
+
+    ind = np.array([[j for j in asn if i not in sets[j]] for i in an])
+    sets = np.asarray(sets)
 
     while(not convergence and steps < max_iter):
         exp_beta = np.exp(beta)
@@ -369,15 +374,22 @@ def main():
     K53 = list(itertools.combinations(range(n), k))
     degs = deg_seq(K53)
     sets = List(itertools.combinations(range(len(degs)), k - 1))
+    fp_njit = nb.njit(beta_fixed_point_R)
 
     beta_K53 = beta_fixed_point(degs, k=k, sets=sets, max_iter=10000)
     print(np.isclose(beta_K53, 3.07028833 * np.ones(5)))
+
+    print(f"Precompiling python jit'd code (with n={n})")
+    tic = time.perf_counter()
+    fp_njit(degs, k=3, sets=sets, max_iter=10000)
+    toc = time.perf_counter()
+    print(f"beta_fixed_point jit'd took {toc - tic:0.4f} seconds")
 
     # for performance
     n = 25
     Kn53 = list(itertools.combinations(range(n), 3))
     degs = deg_seq(Kn53)
-    sets = list(itertools.combinations(range(len(degs)), k - 1))
+    sets = List(itertools.combinations(range(len(degs)), k - 1))
 
     print(f"Running R-converted code (with n={n})")
     tic = time.perf_counter()
@@ -393,12 +405,9 @@ def main():
     toc = time.perf_counter()
     print(f"beta_fixed_point took {toc - tic:0.4f} seconds")
 
-    njit_fp = nb.njit(beta_fixed_point)
-    njit_sets = np.asarray(sets)
-
     print(f"Running python jit'd code (with n={n})")
     tic = time.perf_counter()
-    njit_fp(degs, k=3, sets=njit_sets, max_iter=10000)
+    fp_njit(degs, k=3, sets=sets, max_iter=10000)
     toc = time.perf_counter()
     print(f"beta_fixed_point jit'd took {toc - tic:0.4f} seconds")
 
