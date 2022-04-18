@@ -117,7 +117,8 @@ def beta_fixed_point(degrees, k, sets, max_iter=500, tol=0.0001, beta=None):
 
         # for i in range(n):
         #     ind = np.array([j for j in range(len(sets)) if i not in sets[j]])
-        #     sum_q = np.sum(prod_beta[ind] / (1 + prod_beta[ind] * exp_beta[i]))
+        #     sum_q = np.sum(prod_beta[ind]
+        #                    / (1 + prod_beta[ind] * exp_beta[i]))
         #     if np.isinf(sum_q):
         #         print("Infinite beta")
 
