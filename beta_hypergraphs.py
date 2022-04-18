@@ -394,8 +394,8 @@ def main():
 
     # for performance
     n = 25
-    Kn53 = list(itertools.combinations(range(n), 3))
-    degs = deg_seq(Kn53)
+    Kn3 = list(itertools.combinations(range(n), 3))
+    degs = deg_seq(Kn3)
     sets = List(itertools.combinations(range(len(degs)), k - 1))
 
     print(f"Running R-converted code (with n={n})")
@@ -404,7 +404,7 @@ def main():
     toc = time.perf_counter()
     print(f"beta_fixed_point_R took {toc - tic:0.4f} seconds")
 
-    # print(beta_Kn53)
+    # print(beta_Kn3)
 
     print(f"Running python vectorized code (with n={n})")
     tic = time.perf_counter()
