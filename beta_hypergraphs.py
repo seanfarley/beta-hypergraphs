@@ -229,6 +229,12 @@ def fixed_point_general(degrees, k_list, all_index_sets, max_iter=500,
 
     ns = np.asarray(all_index_sets)
 
+    k_ind = range(len(k_list))
+    ind = np.array([[[j for j in range(len(all_index_sets[k]))
+                      if i not in all_index_sets[k][j]]]
+                    for k in range(len(k_list))
+                    for i in range(n)])
+
     while (not convergence and steps < max_iter):
         exp_beta = np.exp(beta)
         old_beta = beta.copy()
@@ -236,58 +242,28 @@ def fixed_point_general(degrees, k_list, all_index_sets, max_iter=500,
             print("Infinite beta")
             return
 
-        # for index_k in range(len(k_list)):
-        #     sets = all_index_sets[index_k]
-        #     prod_exp_beta = prod_exp_beta_list[index_k]
-        #     for t, s in enumerate(sets):
-        #         prod_exp_beta[t] = np.prod(exp_beta[np.asarray(s)])
-
-        #     if np.any(np.isinf(prod_exp_beta)):
-        #         print("Infinite beta")
-        #         return
-
-        #     prod_exp_beta_list[index_k] = prod_exp_beta
-
         prod_exp_beta_list = np.prod(exp_beta[ns], axis=2)
+        # for i in range(n):
+        #     k_ind = range(len(k_list))
+        #     ind = list(k_ind)
 
-        for i in range(n):
-            k_ind = range(len(k_list))
-            ind = list(k_ind)
+        #     # creates an "index" array
+        #     for index_k in k_ind:
+        #         ind[index_k] = np.array([j for j in range(len(all_index_sets[index_k]))
+        #                                  if i not in all_index_sets[index_k][j]])
 
-            # sum_q_beta = list(k_ind)
-            # for index_k in k_ind:
-            #     sets = all_index_sets[index_k]
-            #     prod_exp_beta = prod_exp_beta_list[index_k]
+        #     sum_q_beta = np.sum(
+        #         prod_exp_beta_list[k_ind, ind]
+        #         / (1 + prod_exp_beta_list[k_ind, ind] * exp_beta[i])
+        #     )
+        #     beta[i] = np.log(degrees[i]) - np.log(sum_q_beta)
 
-            #     ind[index_k] = np.array([j for j in range(len(sets))
-            #                              if i not in sets[j]])
-
-            #     # for j in range(len(sets)):
-            #     #     if i not in sets[j]:
-            #     #         sum_q_beta[index_k] += (
-            #     #             prod_exp_beta[j]
-            #     #             / (1 + prod_exp_beta[j] * exp_beta[i])
-            #     #         )
-
-            #     sum_q_beta[index_k] = np.sum(
-            #         prod_exp_beta[ind[index_k]]
-            #         /
-            #         (1 + prod_exp_beta[ind[index_k]] * exp_beta[i])
-            #     )
-            #     if np.isinf(sum_q_beta[index_k]):
-            #         print("Infinite beta")
-            #         return
-
-            # creates an "index" array
-            for index_k in k_ind:
-                ind[index_k] = np.array([j for j in range(len(all_index_sets[index_k]))
-                                         if i not in all_index_sets[index_k][j]])
-            sum_q_beta = np.sum(
-                prod_exp_beta_list[k_ind, ind]
-                /
-                (1 + prod_exp_beta_list[k_ind, ind] * exp_beta[i])
-            )
-            beta[i] = np.log(degrees[i]) - np.log(sum_q_beta)
+        sum_q_beta = np.sum(prod_exp_beta_list[k_ind, ind]
+                            / (1 + prod_exp_beta_list[k_ind, ind].T
+                               * exp_beta).T, axis=2)
+        # TODO don't know why it's a list of lists
+        sum_q_beta = sum_q_beta[:, 0]
+        beta = np.log(degrees) - np.log(sum_q_beta)
 
         diff = max(abs(old_beta - beta))
         # print(f"diff= {diff} -------- steps= {steps}")
