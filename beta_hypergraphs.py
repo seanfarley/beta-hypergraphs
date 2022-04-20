@@ -289,6 +289,7 @@ def main():
     degs = deg_seq(K53)
     sets = List(itertools.combinations(range(len(degs)), k - 1))
     fp_njit = nb.njit(beta_fixed_point_R)
+    fpg_njit = nb.njit(fixed_point_general_R)
 
     beta_K53 = beta_fixed_point(degs, k=k, sets=sets, max_iter=10000)
     print(np.isclose(beta_K53, 3.07028833 * np.ones(5)))
@@ -327,10 +328,10 @@ def main():
 
     d10_3 = (36, 36, 36, 36, 36, 36, 36, 36, 36, 36)
     n = len(d10_3)
-    k_list = [3, ]
-    all_index_sets = []
+    k_list = List([3, ])
+    all_index_sets = List()
     for k in k_list:
-        sets = list(itertools.combinations(range(n), k - 1))
+        sets = List(itertools.combinations(range(n), k - 1))
         all_index_sets.append(sets)
 
     print(f"Running python R-converted code (with n={n})")
@@ -349,16 +350,10 @@ def main():
     #  3.07028833 3.07028833 3.07028833 3.07028833]
     # 3331
     # 9.997253637461512e-05
-    all_index_sets = List()
-    for k in k_list:
-        sets = List(itertools.combinations(range(n), k - 1))
-        all_index_sets.append(sets)
-
-    fpg_njit = nb.njit(fixed_point_general_R)
 
     print(f"Running python jit'd code (with n={n})")
     tic = time.perf_counter()
-    fpg_njit(d10_3, List(k_list), all_index_sets, max_iter=10000)
+    fpg_njit(d10_3, k_list, all_index_sets, max_iter=10000)
     toc = time.perf_counter()
     print(f"fixed_point_general_R jit'd took {toc - tic:0.4f} seconds")
 
