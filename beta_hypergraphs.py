@@ -249,8 +249,9 @@ def fixed_point_general(degrees, k_list, all_index_sets, max_iter=500,
 
         #     # creates an "index" array
         #     for index_k in k_ind:
-        #         ind[index_k] = np.array([j for j in range(len(all_index_sets[index_k]))
-        #                                  if i not in all_index_sets[index_k][j]])
+        #         iset = all_index_sets[index_k]
+        #         ind[index_k] = np.array([j for j in range(len(iset))
+        #                                  if i not in iset[j]])
 
         #     sum_q_beta = np.sum(
         #         prod_exp_beta_list[k_ind, ind]
