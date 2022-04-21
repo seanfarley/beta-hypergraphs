@@ -295,7 +295,7 @@ def main():
     beta_K53 = beta_fixed_point(degs, k=k, sets=sets, max_iter=10000)
     print(np.isclose(beta_K53, 3.07028833 * np.ones(5)))
 
-    print(f"Precompiling python jit'd code (with n={n})")
+    print(f"Precompiling python jit'd code (with n={n}, k={k})")
     tic = time.perf_counter()
     fp_njit(degs, k=k, sets=sets, max_iter=10000)
     toc = time.perf_counter()
@@ -308,7 +308,7 @@ def main():
     degs = deg_seq(Knk)
     sets = List(itertools.combinations(range(len(degs)), k - 1))
 
-    print(f"Running R-converted code (with n={n})")
+    print(f"Running R-converted code (with n={n}, k={k})")
     tic = time.perf_counter()
     beta_fixed_point_R(degs, k=k, sets=sets, max_iter=10000)
     toc = time.perf_counter()
@@ -316,13 +316,13 @@ def main():
 
     # print(beta_Kn3)
 
-    print(f"Running python vectorized code (with n={n})")
+    print(f"Running python vectorized code (with n={n}, k={k})")
     tic = time.perf_counter()
     beta_fixed_point(degs, k=k, sets=sets, max_iter=10000)
     toc = time.perf_counter()
     print(f"beta_fixed_point took {toc - tic:0.4f} seconds")
 
-    print(f"Running python jit'd code (with n={n})")
+    print(f"Running python jit'd code (with n={n}, k={k})")
     tic = time.perf_counter()
     fp_njit(degs, k=k, sets=sets, max_iter=10000)
     toc = time.perf_counter()
@@ -336,13 +336,13 @@ def main():
         sets = List(itertools.combinations(range(n), k - 1))
         all_index_sets.append(sets)
 
-    print(f"Precompiling python jit'd code (with n={n})")
+    print(f"Precompiling python jit'd code (with n={n}, k={k_list})")
     tic = time.perf_counter()
     fpg_njit(d10_3, k_list, all_index_sets, max_iter=10000)
     toc = time.perf_counter()
     print(f"fixed_point_general jit'd took {toc - tic:0.4f} seconds")
 
-    print(f"Running python vectorized code (with n={n})")
+    print(f"Running python vectorized code (with n={n}, k={k_list})")
     tic = time.perf_counter()
     fixed_point_general(d10_3, k_list, all_index_sets, max_iter=10000)
     toc = time.perf_counter()
@@ -353,7 +353,7 @@ def main():
     # 3331
     # 9.997253637461512e-05
 
-    print(f"Running python jit'd code (with n={n})")
+    print(f"Running python jit'd code (with n={n}, k={k_list})")
     tic = time.perf_counter()
     fpg_njit(d10_3, k_list, all_index_sets, max_iter=10000)
     toc = time.perf_counter()
