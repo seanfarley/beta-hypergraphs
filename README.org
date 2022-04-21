@@ -1,0 +1,43 @@
+#+title: MLE approximation for beta model of random hypergraphs
+
+* Running the code
+
+** R code
+
+#+begin_src shell
+Rscript testing.R
+#+end_src
+
+** Python (cpu version)
+
+Install the dependencies first,
+
+#+begin_src shell
+pip3 install --user -U numpy numba
+#+end_src
+
+Now, run the code
+#+begin_src shell
+python3 beta_hypergraphs.py
+#+end_src
+
+** Python (gpu version)
+
+Install the dependencies,
+
+#+begin_src shell
+pip3 install --user -U cupy
+#+end_src
+
+Installing and running for the first time will take a long time due to
+compiling. Running the code should be as easy as,
+
+#+begin_src shell
+python3 beta_hypergraphs_cupy.py
+#+end_src
+
+To get timing and profiling output, run
+
+#+begin_src shell
+nvprof python3 beta_hypergraphs_cupy.py
+#+end_src
