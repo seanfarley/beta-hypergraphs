@@ -293,13 +293,16 @@ def main():
     fpg_njit = nb.njit(fixed_point_general_R)
 
     beta_K53 = beta_fixed_point(degs, k=k, sets=sets, max_iter=10000)
-    print(np.isclose(beta_K53, 3.07028833 * np.ones(5)))
+    all_passed = np.allclose(beta_K53, 3.07028833 * np.ones(5))
+    print(f"Testing correctness for n={n}, k={k}; passing={all_passed}")
+    print()
 
     print(f"Precompiling python jit'd code (with n={n}, k={k})")
     tic = time.perf_counter()
     fp_njit(degs, k=k, sets=sets, max_iter=10000)
     toc = time.perf_counter()
     print(f"beta_fixed_point jit'd took {toc - tic:0.4f} seconds")
+    print()
 
     # for performance
     n = 25
@@ -313,6 +316,7 @@ def main():
     beta_fixed_point_R(degs, k=k, sets=sets, max_iter=10000)
     toc = time.perf_counter()
     print(f"beta_fixed_point_R took {toc - tic:0.4f} seconds")
+    print()
 
     # print(beta_Kn3)
 
@@ -321,12 +325,14 @@ def main():
     beta_fixed_point(degs, k=k, sets=sets, max_iter=10000)
     toc = time.perf_counter()
     print(f"beta_fixed_point took {toc - tic:0.4f} seconds")
+    print()
 
     print(f"Running python jit'd code (with n={n}, k={k})")
     tic = time.perf_counter()
     fp_njit(degs, k=k, sets=sets, max_iter=10000)
     toc = time.perf_counter()
     print(f"beta_fixed_point_R jit'd took {toc - tic:0.4f} seconds")
+    print()
 
     d10_3 = (36, 36, 36, 36, 36, 36, 36, 36, 36, 36)
     n = len(d10_3)
@@ -341,18 +347,21 @@ def main():
     fpg_njit(d10_3, k_list, all_index_sets, max_iter=10000)
     toc = time.perf_counter()
     print(f"fixed_point_general jit'd took {toc - tic:0.4f} seconds")
+    print()
 
     print(f"Running python R-converted code (with n={n}, k={k_list})")
     tic = time.perf_counter()
     fixed_point_general_R(d10_3, List(k_list), all_index_sets, max_iter=10000)
     toc = time.perf_counter()
     print(f"fixed_point_general_R took {toc - tic:0.4f} seconds")
+    print()
 
     print(f"Running python vectorized code (with n={n}, k={k_list})")
     tic = time.perf_counter()
     fixed_point_general(d10_3, k_list, all_index_sets, max_iter=10000)
     toc = time.perf_counter()
     print(f"fixed_point_general took {toc - tic:0.4f} seconds")
+    print()
 
     # [3.07028833 3.07028833 3.07028833 3.07028833 3.07028833 3.07028833
     #  3.07028833 3.07028833 3.07028833 3.07028833]
