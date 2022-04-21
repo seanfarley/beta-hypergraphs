@@ -342,6 +342,12 @@ def main():
     toc = time.perf_counter()
     print(f"fixed_point_general jit'd took {toc - tic:0.4f} seconds")
 
+    print(f"Running python R-converted code (with n={n}, k={k_list})")
+    tic = time.perf_counter()
+    fixed_point_general_R(d10_3, List(k_list), all_index_sets, max_iter=10000)
+    toc = time.perf_counter()
+    print(f"fixed_point_general_R took {toc - tic:0.4f} seconds")
+
     print(f"Running python vectorized code (with n={n}, k={k_list})")
     tic = time.perf_counter()
     fixed_point_general(d10_3, k_list, all_index_sets, max_iter=10000)
