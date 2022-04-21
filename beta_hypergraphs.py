@@ -297,14 +297,15 @@ def main():
 
     print(f"Precompiling python jit'd code (with n={n})")
     tic = time.perf_counter()
-    fp_njit(degs, k=3, sets=sets, max_iter=10000)
+    fp_njit(degs, k=k, sets=sets, max_iter=10000)
     toc = time.perf_counter()
     print(f"beta_fixed_point jit'd took {toc - tic:0.4f} seconds")
 
     # for performance
     n = 25
-    Kn3 = list(itertools.combinations(range(n), 3))
-    degs = deg_seq(Kn3)
+    k = 3
+    Knk = list(itertools.combinations(range(n), k))
+    degs = deg_seq(Knk)
     sets = List(itertools.combinations(range(len(degs)), k - 1))
 
     print(f"Running R-converted code (with n={n})")
@@ -317,29 +318,29 @@ def main():
 
     print(f"Running python vectorized code (with n={n})")
     tic = time.perf_counter()
-    beta_fixed_point(degs, k=3, sets=sets, max_iter=10000)
+    beta_fixed_point(degs, k=k, sets=sets, max_iter=10000)
     toc = time.perf_counter()
     print(f"beta_fixed_point took {toc - tic:0.4f} seconds")
 
     print(f"Running python jit'd code (with n={n})")
     tic = time.perf_counter()
-    fp_njit(degs, k=3, sets=sets, max_iter=10000)
+    fp_njit(degs, k=k, sets=sets, max_iter=10000)
     toc = time.perf_counter()
     print(f"beta_fixed_point_R jit'd took {toc - tic:0.4f} seconds")
 
     d10_3 = (36, 36, 36, 36, 36, 36, 36, 36, 36, 36)
     n = len(d10_3)
-    k_list = List([3, ])
+    k_list = List([k, ])
     all_index_sets = List()
     for k in k_list:
         sets = List(itertools.combinations(range(n), k - 1))
         all_index_sets.append(sets)
 
-    print(f"Running python R-converted code (with n={n})")
+    print(f"Precompiling python jit'd code (with n={n})")
     tic = time.perf_counter()
-    fixed_point_general_R(d10_3, List(k_list), all_index_sets, max_iter=10000)
+    fpg_njit(d10_3, k_list, all_index_sets, max_iter=10000)
     toc = time.perf_counter()
-    print(f"fixed_point_general_R took {toc - tic:0.4f} seconds")
+    print(f"fixed_point_general jit'd took {toc - tic:0.4f} seconds")
 
     print(f"Running python vectorized code (with n={n})")
     tic = time.perf_counter()
