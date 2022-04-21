@@ -334,7 +334,7 @@ def main():
     print(f"beta_fixed_point_R jit'd took {toc - tic:0.4f} seconds")
     print()
 
-    d10_3 = (36, 36, 36, 36, 36, 36, 36, 36, 36, 36)
+    d10_3 = (36, 36, 36, 36, 36)
     n = len(d10_3)
     k_list = List([k, ])
     all_index_sets = List()
@@ -348,6 +348,14 @@ def main():
     toc = time.perf_counter()
     print(f"fixed_point_general jit'd took {toc - tic:0.4f} seconds")
     print()
+
+    d10_3 = (36, 36, 36, 36, 36, 36, 36, 36, 36, 36)
+    n = len(d10_3)
+    k_list = List([k, ])
+    all_index_sets = List()
+    for k in k_list:
+        sets = List(itertools.combinations(range(n), k - 1))
+        all_index_sets.append(sets)
 
     print(f"Running python R-converted code (with n={n}, k={k_list})")
     tic = time.perf_counter()
