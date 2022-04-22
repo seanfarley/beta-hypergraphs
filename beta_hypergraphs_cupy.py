@@ -126,24 +126,6 @@ def beta_fixed_point2(degrees, k, sets, max_iter=500, tol=0.0001, beta=None):
     ind2 = cp.array([[i not in sets[j] for j in asn] for i in an])
     iind3 = cp.transpose(ind2)
     ind3 = ~iind3
-    # print(ind)
-    # print(ind2)
-    # print(~ind3.T == ind2)
-
-    # sets = cp.asarray(sets, dtype=int)
-    # print(sets)
-
-    # exp_beta = cp.exp(beta)
-    # exp_beta2 = exp_beta * ind3
-    # print(exp_beta[sets])
-    # print(exp_beta2)
-
-    # prod_beta = cp.prod(exp_beta[sets], axis=1)
-    # prod_beta2 = cp.prod(exp_beta2 + iind3, axis=1)
-    # print(prod_beta)
-    # print(prod_beta2)
-    # print(prod_beta[ind])
-    # # print(prod_beta * ind2)
 
     ldegs = cp.log(degrees)
 
