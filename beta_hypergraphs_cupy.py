@@ -64,12 +64,9 @@ def maxabs(old_beta, beta):
     return cp.max(cp.abs(old_beta - beta))
 
 
-def beta_fixed_point(degrees, k, sets, max_iter=500, tol=0.0001, beta=None):
+def beta_fixed_point(degrees, k, sets, ind, max_iter=500, tol=0.0001, beta=None):
     """Use a fixed point algorithm to calculate the MLE."""
     n = len(degrees)
-    sn = len(sets)
-    an = cp.arange(n)
-    asn = cp.arange(sn)
     if beta is None:
         beta = cp.zeros(n)
 
@@ -78,8 +75,6 @@ def beta_fixed_point(degrees, k, sets, max_iter=500, tol=0.0001, beta=None):
 
     # There are more efficient methods for calculating e^{beta_S} for each S in
     # n\choose k-1, e.g using a dynamic algorithm
-
-    ind = cp.array([[j for j in asn if i not in sets[j]] for i in an])
 
     ldegs = cp.log(degrees)
 
@@ -243,13 +238,18 @@ def main():
     degs = deg_seq(K53)
     sets = list(itertools.combinations(range(len(degs)), k - 1))
 
-    # K53_cp = cp.array(K53)
+    sn = len(sets)
+    an = np.arange(n)
+    asn = np.arange(sn)
+    ind = np.array([[j for j in asn if i not in sets[j]] for i in an])
+
     degs_cp = cp.array(degs)
     sets_cp = cp.array(sets)
+    ind_cp = cp.array(ind)
 
     print(f"Running cupy vectorized code (with n={n}, k={k})")
     tic = time.perf_counter()
-    beta_K53 = beta_fixed_point(degs_cp, k=k, sets=sets_cp, max_iter=10000)
+    beta_K53 = beta_fixed_point(degs_cp, k, sets_cp, ind_cp, max_iter=10000)
     toc = time.perf_counter()
     print(f"beta_fixed_point took {toc - tic:0.4f} seconds")
     print()
@@ -287,13 +287,18 @@ def main():
     degs = deg_seq(Kn53)
     sets = list(itertools.combinations(range(len(degs)), k - 1))
 
-    # K53_cp = cp.array(K53)
+    sn = len(sets)
+    an = np.arange(n)
+    asn = np.arange(sn)
+    ind = np.array([[j for j in asn if i not in sets[j]] for i in an])
+
     degs_cp = cp.array(degs)
     sets_cp = cp.array(sets)
+    ind_cp = cp.array(ind)
 
     print(f"Running python vectorized code (with n={n}, k={k})")
     tic = time.perf_counter()
-    beta_fixed_point(degs_cp, k=k, sets=sets_cp, max_iter=10000)
+    beta_fixed_point(degs_cp, k, sets_cp, ind_cp, max_iter=10000)
     toc = time.perf_counter()
     print(f"beta_fixed_point took {toc - tic:0.4f} seconds")
     print()
