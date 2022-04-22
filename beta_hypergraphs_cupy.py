@@ -27,9 +27,31 @@ def bfp_prodadd(exp_beta, ind3, iind3):
     return exp_beta * ind3 + iind3
 
 
+bfp_prodadd_k = cp.ReductionKernel(
+    'T exp_beta, T ind3, T iind3',
+    'T z',
+    'exp_beta * ind3 + iind3',
+    'a * b',
+    'z = a',
+    '1',
+    'bfp_prodadd_k'
+)
+
+
 @cp.fuse
 def bfp_prodexp(prod_beta, mask, exp_beta):
     return (prod_beta * mask) / (1 + (prod_beta * mask * exp_beta))
+
+
+bfp_prodexp_k = cp.ReductionKernel(
+    'T prod_beta, T mask, T exp_beta',
+    'T z',
+    '(prod_beta * mask) / (1 + (prod_beta * mask * exp_beta))',
+    'a + b',
+    'z = log(a)',
+    '0',
+    'bfp_prodexp_k'
+)
 
 
 @cp.fuse
@@ -159,6 +181,60 @@ def beta_fixed_point2(degrees, k, sets, max_iter=500, tol=0.0001, beta=None):
     return beta
 
 
+def beta_fixed_point3(degrees, k, sets, max_iter=500, tol=0.0001, beta=None):
+    """Alternative using less if-statements at the cost of more memory."""
+    n = len(degrees)
+    sn = len(sets)
+    an = cp.arange(n)
+    asn = cp.arange(sn)
+    if beta is None:
+        beta = cp.zeros(n)
+
+    convergence = False
+    steps = 0
+
+    # There are more efficient methods for calculating e^{beta_S} for each S in
+    # n\choose k-1, e.g using a dynamic algorithm
+    ind2 = cp.array([[i not in sets[j] for j in asn] for i in an])
+    iind3 = cp.transpose(ind2)
+    ind3 = ~iind3
+
+    ind2 = cp.array(ind2, dtype=float)
+    ind3 = cp.array(ind3, dtype=float)
+    iind3 = cp.array(iind3, dtype=float)
+
+    ldegs = cp.log(degrees)
+
+    exp_beta = cp.exp(beta)
+    old_beta = beta.copy()
+
+    while(not convergence and steps < max_iter):
+        # exp_beta = cp.exp(beta)
+        # old_beta = beta.copy()
+        # if cp.any(np.isinf(old_beta)):
+        #     return None
+
+        prod_beta = bfp_prodadd_k(exp_beta, ind3, iind3, axis=1)
+
+        beta = ldegs - bfp_prodexp_k(prod_beta, ind2, exp_beta.reshape(-1, 1), axis=1)
+
+        diff = maxabs(old_beta, beta)
+        if diff < tol:
+            convergence = True
+
+        old_beta = beta
+        exp_beta = cp.exp(beta)
+        steps += 1
+
+    # print(steps)
+    # print(diff)
+
+    if steps == max_iter:
+        return
+
+    return beta
+
+
 def main():
     # for correctness
     n = 5
@@ -189,6 +265,21 @@ def main():
     print(f"beta_fixed_point2 took {toc - tic:0.4f} seconds")
     print()
 
+    all_passed = cp.allclose(beta_K53, 3.07028833 * cp.ones(5))
+    print(f"Testing correctness for n={n}, k={k}; passing={all_passed}")
+    print()
+
+    print(f"Running python third vectorized code (with n={n}, k={k})")
+    tic = time.perf_counter()
+    beta_K53 = beta_fixed_point3(degs_cp, k, sets_cp, max_iter=10000)
+    toc = time.perf_counter()
+    print(f"beta_fixed_point3 took {toc - tic:0.4f} seconds")
+    print()
+
+    all_passed = cp.allclose(beta_K53, 3.07028833 * cp.ones(5))
+    print(f"Testing correctness for n={n}, k={k}; passing={all_passed}")
+    print()
+
     # for performance
     n = 25
     k = 4
@@ -212,6 +303,13 @@ def main():
     beta_fixed_point2(degs_cp, k=k, sets=sets_cp, max_iter=10000)
     toc = time.perf_counter()
     print(f"beta_fixed_point2 took {toc - tic:0.4f} seconds")
+    print()
+
+    print(f"Running python third vectorized code (with n={n}, k={k})")
+    tic = time.perf_counter()
+    beta_K53 = beta_fixed_point3(degs_cp, k, sets_cp, max_iter=10000)
+    toc = time.perf_counter()
+    print(f"beta_fixed_point3 took {toc - tic:0.4f} seconds")
 
 
 if __name__ == "__main__":
