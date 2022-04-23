@@ -145,6 +145,68 @@ def beta_fixed_point(degrees, k, sets, ind, max_iter=500, tol=0.0001, beta=None)
     return beta
 
 
+def beta_fixed_point2(degrees, k, sets, ind2, ind3, iind3, max_iter=500, tol=0.0001, beta=None):
+    """Use a fixed point algorithm to calculate the MLE."""
+    n = len(degrees)
+    if beta is None:
+        beta = np.zeros(n)
+
+    convergence = False
+    steps = 0
+
+    # There are more efficient methods for calculating e^{beta_S} for each S in
+    # n\choose k-1, e.g using a dynamic algorithm
+    # sets = np.asarray(list(itertools.combinations(range(n), k - 1)))
+
+    ldegs = np.log(degrees)
+
+    while(not convergence and steps < max_iter):
+        exp_beta = np.exp(beta)
+        old_beta = beta.copy()
+        if np.any(np.isinf(old_beta)):
+            return None
+
+        # for i, s in enumerate(sets):
+        #     prod_beta[i] = np.prod(exp_beta[np.asarray(s)])
+        prod_beta = np.prod(exp_beta * ind3 + iind3, axis=1)
+
+        if np.any(np.isinf(prod_beta)):
+            print("Infinite beta")
+            return
+
+        # for i in range(n):
+        #     ind = np.array([j for j in range(len(sets)) if i not in sets[j]])
+        #     sum_q = np.sum(prod_beta[ind]
+        #                    / (1 + prod_beta[ind] * exp_beta[i]))
+        #     if np.isinf(sum_q):
+        #         print("Infinite beta")
+
+        sum_q = np.sum((prod_beta * ind2) / (1 + (prod_beta * ind2 * exp_beta)),
+                       axis=1)
+
+        if np.any(np.isinf(sum_q)):
+            print("Infinite beta")
+            return
+
+        beta = ldegs - np.log(sum_q)
+
+        diff = np.max(np.abs(old_beta - beta))
+        # print(f"diff= {diff} -------- steps= {steps}")
+        # print(beta)
+        if diff < tol:
+            convergence = True
+
+        steps += 1
+
+    # print(steps)
+    # print(diff)
+
+    if steps == max_iter:
+        return
+
+    return beta
+
+
 def fixed_point_general_R(degrees, k_list, all_index_sets, max_iter=500,
                           tol=0.0001, beta=None):
     """Use a fixed point algorithm to get the MLE."""
@@ -335,6 +397,21 @@ def main():
     beta_fixed_point(degs, k, sets, ind, max_iter=10000)
     toc = time.perf_counter()
     print(f"beta_fixed_point took {toc - tic:0.4f} seconds")
+    print()
+
+    ind2 = np.array([[i not in sets[j] for j in asn] for i in an])
+    iind3 = np.transpose(ind2)
+    ind3 = ~iind3
+
+    ind2 = np.array(ind2, dtype=float)
+    ind3 = np.array(ind3, dtype=float)
+    iind3 = np.array(iind3, dtype=float)
+
+    print(f"Running python second vectorized code (with n={n}, k={k})")
+    tic = time.perf_counter()
+    fp_njit(degs, k=k, sets=sets, max_iter=10000)
+    toc = time.perf_counter()
+    print(f"beta_fixed_point2 took {toc - tic:0.4f} seconds")
     print()
 
     print(f"Running python jit'd code (with n={n}, k={k})")
