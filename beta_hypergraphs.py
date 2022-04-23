@@ -82,12 +82,10 @@ def beta_fixed_point_R(degrees, k, sets, max_iter=500, tol=0.0001, beta=None):
     return beta
 
 
-def beta_fixed_point(degrees, k, sets, ind, max_iter=500, tol=0.0001, beta=None):
+def beta_fixed_point(degrees, k, sets, ind, max_iter=500, tol=0.0001,
+                     beta=None):
     """Use a fixed point algorithm to calculate the MLE."""
     n = len(degrees)
-    sn = len(sets)
-    an = np.arange(n)
-    asn = np.arange(sn)
     if beta is None:
         beta = np.zeros(n)
 
@@ -145,7 +143,8 @@ def beta_fixed_point(degrees, k, sets, ind, max_iter=500, tol=0.0001, beta=None)
     return beta
 
 
-def beta_fixed_point2(degrees, k, sets, ind2, ind3, iind3, max_iter=500, tol=0.0001, beta=None):
+def beta_fixed_point2(degrees, k, sets, ind2, ind3, iind3, max_iter=500,
+                      tol=0.0001, beta=None):
     """Use a fixed point algorithm to calculate the MLE."""
     n = len(degrees)
     if beta is None:
@@ -181,7 +180,8 @@ def beta_fixed_point2(degrees, k, sets, ind2, ind3, iind3, max_iter=500, tol=0.0
         #     if np.isinf(sum_q):
         #         print("Infinite beta")
 
-        sum_q = np.sum((prod_beta * ind2) / (1 + (prod_beta * ind2 * exp_beta)),
+        sum_q = np.sum((prod_beta * ind2)
+                       / (1 + (prod_beta * ind2 * exp_beta)),
                        axis=1)
 
         if np.any(np.isinf(sum_q)):
@@ -349,7 +349,7 @@ def main():
     degs = deg_seq(K53)
     sets = List(itertools.combinations(range(len(degs)), k - 1))
     fp_njit = nb.njit(beta_fixed_point_R)
-    fpg_njit = nb.njit(fixed_point_general_R)
+    # fpg_njit = nb.njit(fixed_point_general_R)
 
     an = np.arange(n)
     sets = np.asarray(sets)
@@ -446,7 +446,8 @@ def main():
 
     # print(f"Running python R-converted code (with n={n}, k={k_list})")
     # tic = time.perf_counter()
-    # fixed_point_general_R(d10_3, List(k_list), all_index_sets, max_iter=10000)
+    # fixed_point_general_R(d10_3, List(k_list), all_index_sets,
+    #                       max_iter=10000)
     # toc = time.perf_counter()
     # print(f"fixed_point_general_R took {toc - tic:0.4f} seconds")
     # print()
