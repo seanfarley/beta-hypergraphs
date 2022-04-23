@@ -242,7 +242,7 @@ def main():
     # print(f"Testing correctness for n={n}, k={k}; passing={all_passed}")
     # print()
 
-    # print(f"Running python third vectorized code (with n={n}, k={k})")
+    # print(f"Running cupy third vectorized code (with n={n}, k={k})")
     # tic = time.perf_counter()
     # beta_K53 = beta_fixed_point3(degs_cp, k, ind2, ind3, iind3, max_iter=10000)
     # toc = time.perf_counter()
@@ -269,7 +269,7 @@ def main():
     sets_cp = cp.array(sets)
     ind_cp = cp.array(ind)
 
-    print(f"Running python vectorized code (with n={n}, k={k})")
+    print(f"Running cupy vectorized code (with n={n}, k={k})")
     tic = time.perf_counter()
     beta_fixed_point(degs_cp, k, sets_cp, ind_cp, max_iter=10000)
     toc = time.perf_counter()
@@ -284,14 +284,14 @@ def main():
     ind3 = cp.array(ind3, dtype=float)
     iind3 = cp.array(iind3, dtype=float)
 
-    print(f"Running python second vectorized code (with n={n}, k={k})")
+    print(f"Running cupy second vectorized code (with n={n}, k={k})")
     tic = time.perf_counter()
     beta_fixed_point2(degs_cp, k, ind2, ind3, iind3, max_iter=10000)
     toc = time.perf_counter()
     print(f"beta_fixed_point2 took {toc - tic:0.4f} seconds")
     print()
 
-    print(f"Running python third vectorized code (with n={n}, k={k})")
+    print(f"Running cupy third vectorized code (with n={n}, k={k})")
     tic = time.perf_counter()
     beta_K53 = beta_fixed_point3(degs_cp, k, ind2, ind3, iind3, max_iter=10000)
     toc = time.perf_counter()
