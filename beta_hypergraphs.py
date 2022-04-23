@@ -306,17 +306,18 @@ def main():
 
     # for performance
     n = 25
-    k = 3
+    k = 5
     Knk = list(itertools.combinations(range(n), k))
     degs = deg_seq(Knk)
     sets = List(itertools.combinations(range(len(degs)), k - 1))
 
-    print(f"Running R-converted code (with n={n}, k={k})")
-    tic = time.perf_counter()
-    beta_fixed_point_R(degs, k=k, sets=sets, max_iter=10000)
-    toc = time.perf_counter()
-    print(f"beta_fixed_point_R took {toc - tic:0.4f} seconds")
-    print()
+    # Too slow
+    # print(f"Running R-converted code (with n={n}, k={k})")
+    # tic = time.perf_counter()
+    # beta_fixed_point_R(degs, k=k, sets=sets, max_iter=10000)
+    # toc = time.perf_counter()
+    # print(f"beta_fixed_point_R took {toc - tic:0.4f} seconds")
+    # print()
 
     # print(beta_Kn3)
 
