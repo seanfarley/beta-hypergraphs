@@ -82,7 +82,7 @@ def beta_fixed_point_R(degrees, k, sets, max_iter=500, tol=0.0001, beta=None):
     return beta
 
 
-def beta_fixed_point(degrees, k, sets, max_iter=500, tol=0.0001, beta=None):
+def beta_fixed_point(degrees, k, sets, ind, max_iter=500, tol=0.0001, beta=None):
     """Use a fixed point algorithm to calculate the MLE."""
     n = len(degrees)
     sn = len(sets)
@@ -97,9 +97,6 @@ def beta_fixed_point(degrees, k, sets, max_iter=500, tol=0.0001, beta=None):
     # There are more efficient methods for calculating e^{beta_S} for each S in
     # n\choose k-1, e.g using a dynamic algorithm
     # sets = np.asarray(list(itertools.combinations(range(n), k - 1)))
-
-    ind = np.array([[j for j in asn if i not in sets[j]] for i in an])
-    sets = np.asarray(sets)
 
     while(not convergence and steps < max_iter):
         exp_beta = np.exp(beta)
@@ -292,7 +289,13 @@ def main():
     fp_njit = nb.njit(beta_fixed_point_R)
     fpg_njit = nb.njit(fixed_point_general_R)
 
-    beta_K53 = beta_fixed_point(degs, k=k, sets=sets, max_iter=10000)
+    an = np.arange(n)
+    sets = np.asarray(sets)
+    sn = len(sets)
+    asn = np.arange(sn)
+    ind = np.array([[j for j in asn if i not in sets[j]] for i in an])
+
+    beta_K53 = beta_fixed_point(degs, k, sets, ind, max_iter=10000)
     all_passed = np.allclose(beta_K53, 3.07028833 * np.ones(5))
     print(f"Testing correctness for n={n}, k={k}; passing={all_passed}")
     print()
@@ -306,10 +309,16 @@ def main():
 
     # for performance
     n = 25
-    k = 5
+    k = 6
     Knk = list(itertools.combinations(range(n), k))
     degs = deg_seq(Knk)
     sets = List(itertools.combinations(range(len(degs)), k - 1))
+
+    an = np.arange(n)
+    sets = np.asarray(sets)
+    sn = len(sets)
+    asn = np.arange(sn)
+    ind = np.array([[j for j in asn if i not in sets[j]] for i in an])
 
     # Too slow
     # print(f"Running R-converted code (with n={n}, k={k})")
@@ -323,7 +332,7 @@ def main():
 
     print(f"Running python vectorized code (with n={n}, k={k})")
     tic = time.perf_counter()
-    beta_fixed_point(degs, k=k, sets=sets, max_iter=10000)
+    beta_fixed_point(degs, k, sets, ind, max_iter=10000)
     toc = time.perf_counter()
     print(f"beta_fixed_point took {toc - tic:0.4f} seconds")
     print()
