@@ -255,7 +255,7 @@ def main():
 
     # for performance
     n = 25
-    k = 4
+    k = 5
     Kn53 = list(itertools.combinations(range(n), k))
     degs = deg_seq(Kn53)
     sets = list(itertools.combinations(range(len(degs)), k - 1))
