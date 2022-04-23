@@ -223,39 +223,39 @@ def main():
     print(f"Testing correctness for n={n}, k={k}; passing={all_passed}")
     print()
 
-    ind2 = np.array([[i not in sets[j] for j in asn] for i in an])
-    iind3 = np.transpose(ind2)
-    ind3 = ~iind3
+    # ind2 = np.array([[i not in sets[j] for j in asn] for i in an])
+    # iind3 = np.transpose(ind2)
+    # ind3 = ~iind3
 
-    ind2 = cp.array(ind2, dtype=float)
-    ind3 = cp.array(ind3, dtype=float)
-    iind3 = cp.array(iind3, dtype=float)
+    # ind2 = cp.array(ind2, dtype=float)
+    # ind3 = cp.array(ind3, dtype=float)
+    # iind3 = cp.array(iind3, dtype=float)
 
-    print(f"Running cupy second vectorized code (with n={n}, k={k})")
-    tic = time.perf_counter()
-    beta_K53 = beta_fixed_point2(degs_cp, k, ind2, ind3, iind3, max_iter=10000)
-    toc = time.perf_counter()
-    print(f"beta_fixed_point2 took {toc - tic:0.4f} seconds")
-    print()
+    # print(f"Running cupy second vectorized code (with n={n}, k={k})")
+    # tic = time.perf_counter()
+    # beta_K53 = beta_fixed_point2(degs_cp, k, ind2, ind3, iind3, max_iter=10000)
+    # toc = time.perf_counter()
+    # print(f"beta_fixed_point2 took {toc - tic:0.4f} seconds")
+    # print()
 
-    all_passed = cp.allclose(beta_K53, 3.07028833 * cp.ones(5))
-    print(f"Testing correctness for n={n}, k={k}; passing={all_passed}")
-    print()
+    # all_passed = cp.allclose(beta_K53, 3.07028833 * cp.ones(5))
+    # print(f"Testing correctness for n={n}, k={k}; passing={all_passed}")
+    # print()
 
-    print(f"Running python third vectorized code (with n={n}, k={k})")
-    tic = time.perf_counter()
-    beta_K53 = beta_fixed_point3(degs_cp, k, ind2, ind3, iind3, max_iter=10000)
-    toc = time.perf_counter()
-    print(f"beta_fixed_point3 took {toc - tic:0.4f} seconds")
-    print()
+    # print(f"Running python third vectorized code (with n={n}, k={k})")
+    # tic = time.perf_counter()
+    # beta_K53 = beta_fixed_point3(degs_cp, k, ind2, ind3, iind3, max_iter=10000)
+    # toc = time.perf_counter()
+    # print(f"beta_fixed_point3 took {toc - tic:0.4f} seconds")
+    # print()
 
-    all_passed = cp.allclose(beta_K53, 3.07028833 * cp.ones(5))
-    print(f"Testing correctness for n={n}, k={k}; passing={all_passed}")
-    print()
+    # all_passed = cp.allclose(beta_K53, 3.07028833 * cp.ones(5))
+    # print(f"Testing correctness for n={n}, k={k}; passing={all_passed}")
+    # print()
 
     # for performance
     n = 25
-    k = 5
+    k = 6
     Kn53 = list(itertools.combinations(range(n), k))
     degs = deg_seq(Kn53)
     sets = list(itertools.combinations(range(len(degs)), k - 1))
