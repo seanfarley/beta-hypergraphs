@@ -332,55 +332,55 @@ def main():
     fp_njit(degs, k=k, sets=sets, max_iter=10000)
     toc = time.perf_counter()
     print(f"beta_fixed_point_R jit'd took {toc - tic:0.4f} seconds")
-    print()
+    # print()
 
-    d10_3 = (36, 36, 36, 36, 36)
-    n = len(d10_3)
-    k_list = List([k, ])
-    all_index_sets = List()
-    for k in k_list:
-        sets = List(itertools.combinations(range(n), k - 1))
-        all_index_sets.append(sets)
+    # d10_3 = (36, 36, 36, 36, 36)
+    # n = len(d10_3)
+    # k_list = List([k, ])
+    # all_index_sets = List()
+    # for k in k_list:
+    #     sets = List(itertools.combinations(range(n), k - 1))
+    #     all_index_sets.append(sets)
 
-    print(f"Precompiling python jit'd code (with n={n}, k={k_list})")
-    tic = time.perf_counter()
-    fpg_njit(d10_3, k_list, all_index_sets, max_iter=10000)
-    toc = time.perf_counter()
-    print(f"fixed_point_general jit'd took {toc - tic:0.4f} seconds")
-    print()
+    # print(f"Precompiling python jit'd code (with n={n}, k={k_list})")
+    # tic = time.perf_counter()
+    # fpg_njit(d10_3, k_list, all_index_sets, max_iter=10000)
+    # toc = time.perf_counter()
+    # print(f"fixed_point_general jit'd took {toc - tic:0.4f} seconds")
+    # print()
 
-    d10_3 = (36, 36, 36, 36, 36, 36, 36, 36, 36, 36)
-    n = len(d10_3)
-    k_list = List([k, ])
-    all_index_sets = List()
-    for k in k_list:
-        sets = List(itertools.combinations(range(n), k - 1))
-        all_index_sets.append(sets)
+    # d10_3 = (36, 36, 36, 36, 36, 36, 36, 36, 36, 36)
+    # n = len(d10_3)
+    # k_list = List([k, ])
+    # all_index_sets = List()
+    # for k in k_list:
+    #     sets = List(itertools.combinations(range(n), k - 1))
+    #     all_index_sets.append(sets)
 
-    print(f"Running python R-converted code (with n={n}, k={k_list})")
-    tic = time.perf_counter()
-    fixed_point_general_R(d10_3, List(k_list), all_index_sets, max_iter=10000)
-    toc = time.perf_counter()
-    print(f"fixed_point_general_R took {toc - tic:0.4f} seconds")
-    print()
+    # print(f"Running python R-converted code (with n={n}, k={k_list})")
+    # tic = time.perf_counter()
+    # fixed_point_general_R(d10_3, List(k_list), all_index_sets, max_iter=10000)
+    # toc = time.perf_counter()
+    # print(f"fixed_point_general_R took {toc - tic:0.4f} seconds")
+    # print()
 
-    print(f"Running python vectorized code (with n={n}, k={k_list})")
-    tic = time.perf_counter()
-    fixed_point_general(d10_3, k_list, all_index_sets, max_iter=10000)
-    toc = time.perf_counter()
-    print(f"fixed_point_general took {toc - tic:0.4f} seconds")
-    print()
+    # print(f"Running python vectorized code (with n={n}, k={k_list})")
+    # tic = time.perf_counter()
+    # fixed_point_general(d10_3, k_list, all_index_sets, max_iter=10000)
+    # toc = time.perf_counter()
+    # print(f"fixed_point_general took {toc - tic:0.4f} seconds")
+    # print()
 
-    # [3.07028833 3.07028833 3.07028833 3.07028833 3.07028833 3.07028833
-    #  3.07028833 3.07028833 3.07028833 3.07028833]
-    # 3331
-    # 9.997253637461512e-05
+    # # [3.07028833 3.07028833 3.07028833 3.07028833 3.07028833 3.07028833
+    # #  3.07028833 3.07028833 3.07028833 3.07028833]
+    # # 3331
+    # # 9.997253637461512e-05
 
-    print(f"Running python jit'd code (with n={n}, k={k_list})")
-    tic = time.perf_counter()
-    fpg_njit(d10_3, k_list, all_index_sets, max_iter=10000)
-    toc = time.perf_counter()
-    print(f"fixed_point_general_R jit'd took {toc - tic:0.4f} seconds")
+    # print(f"Running python jit'd code (with n={n}, k={k_list})")
+    # tic = time.perf_counter()
+    # fpg_njit(d10_3, k_list, all_index_sets, max_iter=10000)
+    # toc = time.perf_counter()
+    # print(f"fixed_point_general_R jit'd took {toc - tic:0.4f} seconds")
 
 
 if __name__ == "__main__":
