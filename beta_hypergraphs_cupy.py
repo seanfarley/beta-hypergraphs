@@ -108,12 +108,9 @@ def beta_fixed_point(degrees, k, sets, ind, max_iter=500, tol=0.0001, beta=None)
     return beta
 
 
-def beta_fixed_point2(degrees, k, sets, max_iter=500, tol=0.0001, beta=None):
+def beta_fixed_point2(degrees, k, ind2, ind3, iind3, max_iter=500, tol=0.0001, beta=None):
     """Alternative using less if-statements at the cost of more memory."""
     n = len(degrees)
-    sn = len(sets)
-    an = cp.arange(n)
-    asn = cp.arange(sn)
     if beta is None:
         beta = cp.zeros(n)
 
@@ -122,10 +119,6 @@ def beta_fixed_point2(degrees, k, sets, max_iter=500, tol=0.0001, beta=None):
 
     # There are more efficient methods for calculating e^{beta_S} for each S in
     # n\choose k-1, e.g using a dynamic algorithm
-
-    ind2 = cp.array([[i not in sets[j] for j in asn] for i in an])
-    iind3 = cp.transpose(ind2)
-    ind3 = ~iind3
 
     ldegs = cp.log(degrees)
 
@@ -158,12 +151,9 @@ def beta_fixed_point2(degrees, k, sets, max_iter=500, tol=0.0001, beta=None):
     return beta
 
 
-def beta_fixed_point3(degrees, k, sets, max_iter=500, tol=0.0001, beta=None):
+def beta_fixed_point3(degrees, k, ind2, ind3, iind3, max_iter=500, tol=0.0001, beta=None):
     """Alternative using less if-statements at the cost of more memory."""
     n = len(degrees)
-    sn = len(sets)
-    an = cp.arange(n)
-    asn = cp.arange(sn)
     if beta is None:
         beta = cp.zeros(n)
 
@@ -172,13 +162,6 @@ def beta_fixed_point3(degrees, k, sets, max_iter=500, tol=0.0001, beta=None):
 
     # There are more efficient methods for calculating e^{beta_S} for each S in
     # n\choose k-1, e.g using a dynamic algorithm
-    ind2 = cp.array([[i not in sets[j] for j in asn] for i in an])
-    iind3 = cp.transpose(ind2)
-    ind3 = ~iind3
-
-    ind2 = cp.array(ind2, dtype=float)
-    ind3 = cp.array(ind3, dtype=float)
-    iind3 = cp.array(iind3, dtype=float)
 
     ldegs = cp.log(degrees)
 
@@ -240,9 +223,17 @@ def main():
     print(f"Testing correctness for n={n}, k={k}; passing={all_passed}")
     print()
 
+    ind2 = np.array([[i not in sets[j] for j in asn] for i in an])
+    iind3 = np.transpose(ind2)
+    ind3 = ~iind3
+
+    ind2 = cp.array(ind2, dtype=float)
+    ind3 = cp.array(ind3, dtype=float)
+    iind3 = cp.array(iind3, dtype=float)
+
     print(f"Running cupy second vectorized code (with n={n}, k={k})")
     tic = time.perf_counter()
-    beta_K53 = beta_fixed_point2(degs_cp, k=k, sets=sets_cp, max_iter=10000)
+    beta_K53 = beta_fixed_point2(degs_cp, k, ind2, ind3, iind3, max_iter=10000)
     toc = time.perf_counter()
     print(f"beta_fixed_point2 took {toc - tic:0.4f} seconds")
     print()
@@ -253,7 +244,7 @@ def main():
 
     print(f"Running python third vectorized code (with n={n}, k={k})")
     tic = time.perf_counter()
-    beta_K53 = beta_fixed_point3(degs_cp, k, sets_cp, max_iter=10000)
+    beta_K53 = beta_fixed_point3(degs_cp, k, ind2, ind3, iind3, max_iter=10000)
     toc = time.perf_counter()
     print(f"beta_fixed_point3 took {toc - tic:0.4f} seconds")
     print()
@@ -285,18 +276,34 @@ def main():
     print(f"beta_fixed_point took {toc - tic:0.4f} seconds")
     print()
 
+    ind2 = np.array([[i not in sets[j] for j in asn] for i in an])
+    iind3 = np.transpose(ind2)
+    ind3 = ~iind3
+
+    ind2 = cp.array(ind2, dtype=float)
+    ind3 = cp.array(ind3, dtype=float)
+    iind3 = cp.array(iind3, dtype=float)
+
     print(f"Running python second vectorized code (with n={n}, k={k})")
     tic = time.perf_counter()
-    beta_fixed_point2(degs_cp, k=k, sets=sets_cp, max_iter=10000)
+    beta_fixed_point2(degs_cp, k, ind2, ind3, iind3, max_iter=10000)
     toc = time.perf_counter()
     print(f"beta_fixed_point2 took {toc - tic:0.4f} seconds")
     print()
 
     print(f"Running python third vectorized code (with n={n}, k={k})")
     tic = time.perf_counter()
-    beta_K53 = beta_fixed_point3(degs_cp, k, sets_cp, max_iter=10000)
+    beta_K53 = beta_fixed_point3(degs_cp, k, ind2, ind3, iind3, max_iter=10000)
     toc = time.perf_counter()
     print(f"beta_fixed_point3 took {toc - tic:0.4f} seconds")
+
+    # print(f"Proof of slow memory testing on the gpu (with n={n}, k={k})")
+    # tic = time.perf_counter()
+    # ind2 = cp.array([[i not in sets_cp[j] for j in asn] for i in an])
+    # iind3 = cp.transpose(ind2)
+    # ind3 = ~iind3
+    # toc = time.perf_counter()
+    # print(f"Memory testing (e.g. `if i in set`) took {toc - tic:0.4f} seconds")
 
 
 if __name__ == "__main__":
