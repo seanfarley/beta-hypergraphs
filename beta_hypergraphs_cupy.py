@@ -64,7 +64,8 @@ def maxabs(old_beta, beta):
     return cp.max(cp.abs(old_beta - beta))
 
 
-def beta_fixed_point(degrees, k, sets, ind, max_iter=500, tol=0.0001, beta=None):
+def beta_fixed_point(degrees, k, sets, ind, max_iter=500, tol=0.0001,
+                     beta=None):
     """Use a fixed point algorithm to calculate the MLE."""
     n = len(degrees)
     if beta is None:
@@ -108,7 +109,8 @@ def beta_fixed_point(degrees, k, sets, ind, max_iter=500, tol=0.0001, beta=None)
     return beta
 
 
-def beta_fixed_point2(degrees, k, ind2, ind3, iind3, max_iter=500, tol=0.0001, beta=None):
+def beta_fixed_point2(degrees, k, ind2, ind3, iind3, max_iter=500, tol=0.0001,
+                      beta=None):
     """Alternative using less if-statements at the cost of more memory."""
     n = len(degrees)
     if beta is None:
@@ -151,7 +153,8 @@ def beta_fixed_point2(degrees, k, ind2, ind3, iind3, max_iter=500, tol=0.0001, b
     return beta
 
 
-def beta_fixed_point3(degrees, k, ind2, ind3, iind3, max_iter=500, tol=0.0001, beta=None):
+def beta_fixed_point3(degrees, k, ind2, ind3, iind3, max_iter=500, tol=0.0001,
+                      beta=None):
     """Alternative using less if-statements at the cost of more memory."""
     n = len(degrees)
     if beta is None:
@@ -176,7 +179,8 @@ def beta_fixed_point3(degrees, k, ind2, ind3, iind3, max_iter=500, tol=0.0001, b
 
         prod_beta = bfp_prodadd_k(exp_beta, ind3, iind3, axis=1)
 
-        beta = ldegs - bfp_prodexp_k(prod_beta, ind2, exp_beta.reshape(-1, 1), axis=1)
+        beta = ldegs - bfp_prodexp_k(prod_beta, ind2, exp_beta.reshape(-1, 1),
+                                     axis=1)
 
         diff = maxabs(old_beta, beta)
         if diff < tol:
@@ -233,7 +237,8 @@ def main():
 
     # print(f"Running cupy second vectorized code (with n={n}, k={k})")
     # tic = time.perf_counter()
-    # beta_K53 = beta_fixed_point2(degs_cp, k, ind2, ind3, iind3, max_iter=10000)
+    # beta_K53 = beta_fixed_point2(degs_cp, k, ind2, ind3, iind3,
+    #                              max_iter=10000)
     # toc = time.perf_counter()
     # print(f"beta_fixed_point2 took {toc - tic:0.4f} seconds")
     # print()
@@ -244,7 +249,8 @@ def main():
 
     # print(f"Running cupy third vectorized code (with n={n}, k={k})")
     # tic = time.perf_counter()
-    # beta_K53 = beta_fixed_point3(degs_cp, k, ind2, ind3, iind3, max_iter=10000)
+    # beta_K53 = beta_fixed_point3(degs_cp, k, ind2, ind3, iind3,
+    #                              max_iter=10000)
     # toc = time.perf_counter()
     # print(f"beta_fixed_point3 took {toc - tic:0.4f} seconds")
     # print()
@@ -303,7 +309,7 @@ def main():
     # iind3 = cp.transpose(ind2)
     # ind3 = ~iind3
     # toc = time.perf_counter()
-    # print(f"Memory testing (e.g. `if i in set`) took {toc - tic:0.4f} seconds")
+    # print(f"Memory (e.g. `if i in set`) took {toc - tic:0.4f} seconds")
 
 
 if __name__ == "__main__":
