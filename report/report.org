@@ -184,18 +184,17 @@ Insert timings for second pass at vectorization
 insert diagram showing subset of memory e.g. =np.take=
 #+end_todo
 
+* Miscellanea
+#+begin_todo
+jit
+#+end_todo
+
 #+begin_todo
 write about non-subset method using identity (i.e. 0 or 1)
 #+end_todo
 
 #+begin_todo
 insert diagram showing non-subset memory
-#+end_todo
-
-
-* Miscellanea
-#+begin_todo
-jit
 #+end_todo
 
 #+print_bibliography:
