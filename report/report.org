@@ -1,0 +1,201 @@
+#+title: Maximum Likelihood Estimation of $\beta$ models for random hypergraphs
+#+date: Tuesday, May 3, 2022
+#+options: toc:nil
+#+bibliography: report.bib
+#+latex_header: \usepackage{tikz}
+
+#+begin_export latex
+\definecolor{purple}{rgb}{0.5, 0.0, 0.5}
+\newenvironment{todo}{{\bf TODO:} \sf \begingroup\color{purple}}{\endgroup}
+#+end_export
+
+
+* Introduction
+In this report, we'll examine the implementations of the maximum likelihood
+estimator (MLE) from [cite:@https://doi.org/10.48550/arxiv.1407.1004].
+
+** Initial =R= code
+We will take a look at one particular hot spot of code that will generalize to
+For the purposes of this report, we will talk about one particular part of the
+original =R= code (but removing some $NaN$ checks), namely the part:
+
+#+begin_src R
+# Calculate the beta estimate for each beta[i]
+##### currently very slow #####
+for (i in 1:n){
+  sum.q.beta=0
+  for (j in 1:nrow(sets)){
+    tuple=sets[j,] # tuple is a (k-1)-tuple of [1,2,...n]
+    if (!(i %in% tuple)){
+      sum.q.beta = sum.q.beta + prod.exp.beta[j]/(1+(prod.exp.beta[j]*exp.beta[i]))
+    }
+    beta[i]=log(degrees[i])-log(sum.q.beta)
+  }
+}
+#+end_src
+
+Writing this in a pseudo-=Python= way, we have:
+
+#+name: original-python
+#+begin_src python
+for i in range(n):
+    sum_q = 0
+    for j in range(rows):
+        if i not in some_edges_set:
+            sum_q += prod_beta[j] / (1 + prod_beta[j] * exp_beta[i])
+        beta[i] = log(degrees[i]) - log(sum_q)
+#+end_src
+
+In both cases, =prod_exp_beta= and =exp_beta= are  known to be just some vectors we
+need (their computation will follow from our abstraction). Let's write this even
+more abstract:
+
+#+begin_src python
+for i in range(n):
+    q = 0
+    for j in range(rows):
+        if i not in some_edges_set:
+            q += vec_a[j] / (1 + vec_a[j] * vec_b[i])
+        beta[i] = log(constant) - log(q)
+#+end_src
+
+#+caption: As we can see from the diagram, looping accesses each part of the memory one at a time.
+#+name: fig:scalar-simd
+[[./scalar-simd.png]]
+
+** Vectorization
+For modern processors, chunks of memory can be sent, i.e. vectors, instead of
+individual scalars. The figure [[fig:scalar-simd]] can then be written as,
+
+#+caption: Vectorized operation of [[fig:scalar-simd]]
+#+name: fig:vector-simd
+[[./vector-simd.png]]
+
+The major difference to take away from this is that this was one operation, as
+denoted by the single =+= sign. The list of operations the processor supports
+ultimately will depend on the specific hardware. Fortunately, for our MLE
+algorithm almost all hardware is supported. By utilizing this, we can refactor
+our MLE algorithm to be more efficient.
+
+* Algorithms
+** Fancy Indexing
+Fancy indexing is a term coined by the =NumPy= community that describes taking an
+arbitrary subset of an array. For example,
+
+#+begin_src python
+>>> import numpy as np
+>>> A = np.arange(10) + 3
+>>> A
+array([ 3,  4,  5,  6,  7,  8,  9, 10, 11, 12])
+>>> indices = np.array([1, 4, 9])
+>>> A[indices]
+array([ 4,  7, 12])
+#+end_src
+
+A key takeaway from this code snippet should be that no memory was copied just a
+special "view" of a subset of our original array. This will be an efficient way
+to avoid using an =if= statement in our computationally expensive core. From our
+original python psuedo-code, the strategy will be to calculate the indices
+/before/ vectorizing.
+
+#+begin_src python
+indices = []
+for i in range(n):
+    for j in range(m):
+        if i not in degrees_choose_k:
+            indices.append(j)
+#+end_src
+
+#+begin_todo
+move to misc
+#+end_todo
+
+For a bit faster performance, we can use a =Python= technique known as list
+comprehension,
+
+#+begin_src python
+indices = [[j for j in range(m) if i not in degrees_choose_k[j]]
+           for i in range(n)]
+#+end_src
+
+For a set the size of $25 \choose 5$ , we have the timings,
+
+#+begin_src shell
+ python3 -m timeit -s 'import itertools; n=25; k=6; ind=[]; sets=list(itertools.combinations(range(n), k-1));' '
+for i in range(n):
+    for j in range(len(sets)):
+        if i not in sets[j]:
+            ind.append(j)
+'
+2 loops, best of 5: 143 msec per loop
+ python3 -m timeit -s 'import itertools; n=25; k=6; ind=[]; sets=list(itertools.combinations(range(n), k-1));' '[[j for j in range(len(sets)) if i not in sets[j]] for i in range(n)]'
+2 loops, best of 5: 135 msec per loop
+#+end_src
+
+So, this boost is almost negligible.
+
+*** Removing the column loop
+We now have an index array. For a graph of size $5 \choose 2$ this is,
+
+#+begin_src python
+[[4 5 6 7 8 9]
+ [1 2 3 7 8 9]
+ [0 2 3 5 6 9]
+ [0 1 3 4 6 8]
+ [0 1 2 4 5 7]]
+#+end_src
+
+Our new vectorized algorithm is now,
+
+#+begin_src python
+for i in range(n):
+    ind = indices[i]
+    sum_q = sum(prod_beta[ind] / (1 + prod_beta[ind] * exp_beta[i]))
+    beta[i] = log(degrees[i]) - log(sum_q)
+#+end_src
+
+We no longer need to have the inner-loop (column) where we use an =if= statement
+to test for inclusion. That logic is done apriori (and much faster).
+
+#+begin_todo
+Insert timings for first pass at vectorization
+#+end_todo
+
+*** Removing the row loop
+The astute reader will notice that this for-loop is over a matrix and operates
+row-by-row. Therefore, we can further vectorize this by just writing it as a
+matrix-vector operation,
+
+#+begin_src python
+pb = prod_beta[indices]
+sum_q = sum(pb / (1 + (pb.T * exp_beta).T), axis=1)
+
+beta = log(degrees) - log(sum_q)
+#+end_src
+
+where =T= denotes the transpose, which is needed for the correct shape of
+matrix-vector multiplication.
+
+#+begin_todo
+Insert timings for second pass at vectorization
+#+end_todo
+
+#+begin_todo
+insert diagram showing subset of memory e.g. =np.take=
+#+end_todo
+
+#+begin_todo
+write about non-subset method using identity (i.e. 0 or 1)
+#+end_todo
+
+#+begin_todo
+insert diagram showing non-subset memory
+#+end_todo
+
+
+* Miscellanea
+#+begin_todo
+jit
+#+end_todo
+
+#+print_bibliography:
