@@ -120,7 +120,7 @@ for i in range(n):
 #+end_src
 
 We no longer need to have the inner-loop (column) where we use an =if= statement
-to test for inclusion. That logic is done apriori (and much faster).
+to test for inclusion. That logic is done a priori (and much faster).
 
 #+begin_todo
 Insert timings for first pass at vectorization
