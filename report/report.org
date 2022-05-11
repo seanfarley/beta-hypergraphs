@@ -46,18 +46,7 @@ for i in range(n):
         beta[i] = log(degrees[i]) - log(sum_q)
 #+end_src
 
-In both cases, =prod_exp_beta= and =exp_beta= are  known to be just some vectors we
-need (their computation will follow from our abstraction). Let's write this even
-more abstract:
-
-#+begin_src python
-for i in range(n):
-    q = 0
-    for j in range(rows):
-        if i not in some_edges_set:
-            q += vec_a[j] / (1 + vec_a[j] * vec_b[i])
-        beta[i] = log(constant) - log(q)
-#+end_src
+In both cases, =prod_exp_beta= and =exp_beta= are  vectors.
 
 #+caption: As we can see from the diagram, looping accesses each part of the memory one at a time.
 #+name: fig:scalar-simd
