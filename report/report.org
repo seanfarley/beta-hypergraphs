@@ -17,7 +17,7 @@ estimator (MLE) from [cite:@https://doi.org/10.48550/arxiv.1407.1004].
 ** Initial =R= code
 We will take a look at one particular hot spot of code that will generalize to
 For the purposes of this report, we will talk about one particular part of the
-original =R= code (but removing some $NaN$ checks), namely the part:
+original =R= code (but removing some =NaN= checks), namely the part:
 
 #+begin_src R
 # Calculate the beta estimate for each beta[i]
