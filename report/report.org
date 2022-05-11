@@ -180,10 +180,12 @@ for i in range(n):
 So, this boost is almost negligible but it is common practice in =Python= to write
 this is in a list comprehension way.
 
+** Numba JIT
 #+begin_todo
 jit
 #+end_todo
 
+** Alternatives to fancy indexing
 #+begin_todo
 write about non-subset method using identity (i.e. 0 or 1)
 #+end_todo
