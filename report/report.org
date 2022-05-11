@@ -76,6 +76,7 @@ compute the MLE as,
 The fixed point algorithm is to start with any $\hat{\beta}_{(0)}$ and define
 $\hat{\beta}_{(l + 1)} = \phi(\hat{\beta}_{(l)})$  for $l = 0, 1, 2, \dots$.
 
+* Implementation
 ** Initial =R= code
 We will take a look at one particular hot spot of code that will generalize to
 For the purposes of this report, we will talk about one particular part of the
@@ -130,7 +131,6 @@ ultimately will depend on the specific hardware. Fortunately, for our MLE
 algorithm almost all hardware is supported. By utilizing this, we can refactor
 our MLE algorithm to be more efficient.
 
-* Algorithms
 ** Fancy Indexing
 Fancy indexing is a term coined by the =NumPy= community that describes taking an
 arbitrary subset of an array. For example,
