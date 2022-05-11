@@ -95,34 +95,9 @@ for i in range(n):
             indices.append(j)
 #+end_src
 
-#+begin_todo
-move to misc
-#+end_todo
 
-For a bit faster performance, we can use a =Python= technique known as list
-comprehension,
-
-#+begin_src python
-indices = [[j for j in range(m) if i not in degrees_choose_k[j]]
-           for i in range(n)]
-#+end_src
-
-For a set the size of $25 \choose 5$ , we have the timings,
-
-#+begin_src shell
- python3 -m timeit -s 'import itertools; n=25; k=6; ind=[]; sets=list(itertools.combinations(range(n), k-1));' '
-for i in range(n):
-    for j in range(len(sets)):
-        if i not in sets[j]:
-            ind.append(j)
-'
-2 loops, best of 5: 143 msec per loop
- python3 -m timeit -s 'import itertools; n=25; k=6; ind=[]; sets=list(itertools.combinations(range(n), k-1));' '[[j for j in range(len(sets)) if i not in sets[j]] for i in range(n)]'
-2 loops, best of 5: 135 msec per loop
-#+end_src
-
-So, this boost is almost negligible but it is common practice in =Python= to write
-this is in a list comprehension way.
+Note that the code in our repository is written in a slightly different way; see
+the section [[*List comprehension][List comprehension]] for more detail.
 
 *** Removing the column loop
 We now have an index array. For a graph of size $5 \choose 2$ this is,
@@ -179,6 +154,32 @@ Insert timings for second pass at vectorization
 [[./first-pass-vec-op.pdf]]
 
 * Miscellanea
+** List comprehension
+For a bit faster performance, we can use a =Python= technique known as list
+comprehension,
+
+#+begin_src python
+indices = [[j for j in range(m) if i not in degrees_choose_k[j]]
+           for i in range(n)]
+#+end_src
+
+For a set the size of $25 \choose 5$ , we have the timings,
+
+#+begin_src shell
+ python3 -m timeit -s 'import itertools; n=25; k=6; ind=[]; sets=list(itertools.combinations(range(n), k-1));' '
+for i in range(n):
+    for j in range(len(sets)):
+        if i not in sets[j]:
+            ind.append(j)
+'
+2 loops, best of 5: 143 msec per loop
+ python3 -m timeit -s 'import itertools; n=25; k=6; ind=[]; sets=list(itertools.combinations(range(n), k-1));' '[[j for j in range(len(sets)) if i not in sets[j]] for i in range(n)]'
+2 loops, best of 5: 135 msec per loop
+#+end_src
+
+So, this boost is almost negligible but it is common practice in =Python= to write
+this is in a list comprehension way.
+
 #+begin_todo
 jit
 #+end_todo
