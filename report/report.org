@@ -181,9 +181,13 @@ matrix-vector multiplication.
 Insert timings for second pass at vectorization
 #+end_todo
 
-#+begin_todo
-insert diagram showing subset of memory e.g. =np.take=
-#+end_todo
+#+caption: A "fancy indexing" of an array
+#+name: fig:fancy-index
+[[./fancy-index.pdf]]
+
+#+caption: Vector operations
+#+name: fig:first-pass-vec-op
+[[./first-pass-vec-op.pdf]]
 
 * Miscellanea
 #+begin_todo
