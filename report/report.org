@@ -36,7 +36,9 @@ for (i in 1:n){
 
 Writing this in a pseudo-=Python= way, we have:
 
-#+name: original-python
+#+caption: Pseudo code for our MLE calculation
+#+name: listing:for-loop-python
+#+attr_latex: :placement [H]
 #+begin_src python
 for i in range(rows):
     sum_q = 0
@@ -113,7 +115,7 @@ We now have an index array. For a graph of size $5 \choose 2$ this is,
  [0 1 2 4 5 7]]
 #+end_src
 
-Our new vectorized algorithm is now,
+Following from Listing [[listing:for-loop-python]], our new vectorized algorithm is now,
 
 #+begin_src python
 for i in range(rows):
