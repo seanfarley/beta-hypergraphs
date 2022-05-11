@@ -3,6 +3,7 @@
 #+options: toc:nil
 #+bibliography: report.bib
 #+latex_header: \usepackage{tikz}
+#+latex_header: \newcommand{\prob}{\mathbb{P}}
 
 #+begin_export latex
 \definecolor{purple}{rgb}{0.5, 0.0, 0.5}
@@ -12,7 +13,53 @@
 
 * Introduction
 In this report, we'll examine the implementations of the maximum likelihood
-estimator (MLE) from [cite:@https://doi.org/10.48550/arxiv.1407.1004].
+estimator (MLE) from [cite:@https://doi.org/10.48550/arxiv.1407.1004]. Motivated
+by social network models, Despina et al construct a statistical method for
+modeling social interactions. Here we concentrate on the first type of
+hypergraph called /uniform hypergraphs/, although initial coding experiments have
+produced similar speed ups for /general hypergraphs/.
+
+Our goal in this report is to write an algorithm that calculates the MLE for the
+uniform hypergraph. By using vectorization, we can write code that runs on both
+the CPU and the GPU.
+
+** Statistical Model for uniform hypergraphs
+First, we define a hypergraph $H$ as a pair $(V, F)$ where $\left\{v_{1,} v_{2},
+\dots, v_{n \right\}}$ is a set of /nodes/ and $F$ is a family of non-empty subsets of V
+of cardinality different from 1
+[cite:@https://doi.org/10.48550/arxiv.1407.1004]. Define $E=E_{n$} as the set of
+all realized edges for a hypergraph on $n$ nodes. We can now write $x=(V,F)$ as
+the indicator vector, zero or one, $x = \left\{x_e, e \in E \right\}$ where $x_e
+= 1$ for $e \in F$ and $x_e \in E \setminus F$.
+
+We use the Bernoulli probability of observing the hypergraph $x$,
+
+#+name: eq:1
+\begin{equation}
+\prob(x) = \prod_{e \in E} p_e^{x_e} (1 - p_e)^{1 - x_e}
+\end{equation}
+
+For /k-uniform/ hypergraphs, where all edges are of size /k/, the probability can be
+calculated to be,
+
+#+name: eq:2
+\begin{equation}
+\prob_\beta(x) = \frac{\exp \left\{ \sum_{e \in {[n] \choose k}} \tilde{\beta_{e}}x_{e}\right\}}{\prod 1 + e^{\tilde{\beta}_{e}}}
+= \exp \left\{ \sum_{i \in V} d_i(x)\beta_i - \psi(\beta) \right\}
+\end{equation}
+
+where $e \in F$, $\tilde{\beta}_{i} = \sum_{i \in e} \beta_{i$},  $[n] \choose k$ be the set of
+all subsets of size $k$ of the set $\left\{ 1, \dots , n\right\}$, $d_i$ is the
+degree of the node $i$, and the normalizing constant is,
+
+#+name: eq:3
+\begin{equation}
+\psi(\beta) = \sum_{e \in {[n] \choose k}} \log (1 + e^{\tilde{\beta}_{e}}).
+\end{equation}
+
+From [cite:@https://doi.org/10.48550/arxiv.1407.1004], it is shown that the
+/sufficient statistics for the k-uniform beta model/ are the entries of the
+degree sequence vector of the hypergraph, $(d_{}_{1 }(x), \dots , d_{n}(x))$.
 
 ** Initial =R= code
 We will take a look at one particular hot spot of code that will generalize to
