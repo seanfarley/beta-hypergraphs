@@ -61,6 +61,21 @@ From [cite:@https://doi.org/10.48550/arxiv.1407.1004], it is shown that the
 /sufficient statistics for the k-uniform beta model/ are the entries of the
 degree sequence vector of the hypergraph, $(d_{}_{1 }(x), \dots , d_{n}(x))$.
 
+** Fixed point algorithm
+We will use the fixed point algorithm, with its geometric convergence rate, to
+compute the MLE for our beta model
+[cite:@https://doi.org/10.48550/arxiv.1407.1004]. From [[eq:2]] and [[eq:3]], we can
+compute the MLE as,
+
+#+name: eq:4
+\begin{equation}
+\hat{\beta}_i = \log  d_i - \log \sum_{s \in {[n] \setminus \{i\} \choose k - 1}} \frac{e^{\hat{\tilde{\beta}}_{s}}}{1 + e^{{\hat{\tilde{\beta}}_{s}} + \hat{\beta}_i}}
+ := \phi_i(\hat{\beta}).
+\end{equation}
+
+The fixed point algorithm is to start with any $\hat{\beta}_{(0)}$ and define
+$\hat{\beta}_{(l + 1)} = \phi(\hat{\beta}_{(l)})$  for $l = 0, 1, 2, \dots$.
+
 ** Initial =R= code
 We will take a look at one particular hot spot of code that will generalize to
 For the purposes of this report, we will talk about one particular part of the
