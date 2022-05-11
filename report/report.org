@@ -132,7 +132,8 @@ for i in range(n):
 2 loops, best of 5: 135 msec per loop
 #+end_src
 
-So, this boost is almost negligible.
+So, this boost is almost negligible but it is common practice in =Python= to write
+this is in a list comprehension way.
 
 *** Removing the column loop
 We now have an index array. For a graph of size $5 \choose 2$ this is,
