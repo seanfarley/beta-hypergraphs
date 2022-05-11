@@ -95,6 +95,9 @@ for i in range(n):
             indices.append(j)
 #+end_src
 
+#+caption: A "fancy indexing" of an array
+#+name: fig:fancy-index
+[[./fancy-index.pdf]]
 
 Note that the code in our repository is written in a slightly different way; see
 the section [[*List comprehension][List comprehension]] for more detail.
@@ -144,10 +147,6 @@ matrix-vector multiplication.
 #+begin_todo
 Insert timings for second pass at vectorization
 #+end_todo
-
-#+caption: A "fancy indexing" of an array
-#+name: fig:fancy-index
-[[./fancy-index.pdf]]
 
 #+caption: Vector operations
 #+name: fig:first-pass-vec-op
