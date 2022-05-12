@@ -253,8 +253,17 @@ So, this boost is almost negligible but it is common practice in =Python= to wri
 this is in a list comprehension way.
 
 ** Numba JIT
+Just-in-time (JIT) compilation is a method of compiling code during the execution of a
+program rather than before. This allows traditionally interpreted computer
+languages, such as =Python=, to gain some speed boosts that compiled languages,
+such as =C++=, have.
+
+To try this method in =Python=, we will use =Numba= [cite:@10.1145/2833157.2833162],
+a library for =Python= that provides a JIT compiler. This approach is best suited
+for non-vectorized code such as Listing [[listing:for-loop-python]].
+
 #+begin_todo
-jit
+insert jit timings
 #+end_todo
 
 ** Alternatives to fancy indexing
