@@ -118,7 +118,7 @@ In both cases, =prod_exp_beta= and =exp_beta= are  vectors.
 
 ** Vectorization
 For modern processors, chunks of memory can be sent, i.e. vectors, instead of
-individual scalars. The figure [[fig:scalar-simd]] can then be written as,
+individual scalars. Figure [[fig:scalar-simd]] can then be written as,
 
 #+caption: Vectorized operation of [[fig:scalar-simd]], reducing the operations from 4 to 1.
 #+name: fig:vector-simd
