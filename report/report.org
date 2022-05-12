@@ -193,6 +193,17 @@ to test for inclusion. That logic is done a priori (and much faster).
 Insert timings for first pass at vectorization
 #+end_todo
 
+In Figure [[fig:first-pass-vec-op]], we can see in a visual way how this first pass
+is vectorized and sent to the processor as a chunk of memory to perform just a
+few operations.
+
+#+caption: Vectorization of computing =sum_q= where =pb= is =prod_beta= and =eb= is =exp_beta=
+#+name: fig:first-pass-vec-op
+#+attr_latex: :placement [H]
+[[./first-pass-vec-op.pdf]]
+
+This is the /crux/ of how we speed up this calculation.
+
 *** Removing the row loop
 The astute reader will notice that this for-loop is over a matrix and operates
 row-by-row. Therefore, we can further vectorize this by just writing it as a
@@ -211,10 +222,6 @@ matrix-vector multiplication.
 #+begin_todo
 Insert timings for second pass at vectorization
 #+end_todo
-
-#+caption: Vector operations
-#+name: fig:first-pass-vec-op
-[[./first-pass-vec-op.pdf]]
 
 * Miscellanea
 ** List comprehension
