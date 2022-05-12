@@ -113,6 +113,7 @@ In both cases, =prod_exp_beta= and =exp_beta= are  vectors.
 
 #+caption: As we can see from the diagram, looping accesses each part of the memory one at a time.
 #+name: fig:scalar-simd
+#+attr_latex: :width 0.4\linewidth
 [[./scalar-simd.png]]
 
 ** Vectorization
@@ -121,6 +122,7 @@ individual scalars. The figure [[fig:scalar-simd]] can then be written as,
 
 #+caption: Vectorized operation of [[fig:scalar-simd]]
 #+name: fig:vector-simd
+#+attr_latex: :width 0.4\linewidth
 [[./vector-simd.png]]
 
 The major difference to take away from this is that this was one operation, as
