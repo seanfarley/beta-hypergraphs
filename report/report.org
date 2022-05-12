@@ -266,13 +266,4 @@ for non-vectorized code such as Listing [[listing:for-loop-python]].
 insert jit timings
 #+end_todo
 
-** Alternatives to fancy indexing
-#+begin_todo
-write about non-subset method using identity (i.e. 0 or 1)
-#+end_todo
-
-#+begin_todo
-insert diagram showing non-subset memory
-#+end_todo
-
 #+print_bibliography:
