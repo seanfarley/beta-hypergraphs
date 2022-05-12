@@ -96,10 +96,10 @@ for (i in 1:n){
 #+end_src
 
 Writing this in a pseudo-=Python= way, we have:
+\linebreak
 
 #+caption: Pseudo code for our MLE calculation
 #+name: listing:for-loop-python
-#+attr_latex: :placement [H]
 #+begin_src python
 for i in range(rows):
     sum_q = 0
