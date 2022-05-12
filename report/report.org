@@ -111,7 +111,7 @@ for i in range(rows):
 
 In both cases, =prod_exp_beta= and =exp_beta= are  vectors.
 
-#+caption: As we can see from the diagram, looping accesses each part of the memory one at a time.
+#+caption: Looping accesses each part of the memory one at a time.
 #+name: fig:scalar-simd
 #+attr_latex: :width 0.4\linewidth
 [[./scalar-simd.png]]
@@ -120,7 +120,7 @@ In both cases, =prod_exp_beta= and =exp_beta= are  vectors.
 For modern processors, chunks of memory can be sent, i.e. vectors, instead of
 individual scalars. The figure [[fig:scalar-simd]] can then be written as,
 
-#+caption: Vectorized operation of [[fig:scalar-simd]]
+#+caption: Vectorized operation of [[fig:scalar-simd]], reducing the operations from 4 to 1.
 #+name: fig:vector-simd
 #+attr_latex: :width 0.4\linewidth
 [[./vector-simd.png]]
