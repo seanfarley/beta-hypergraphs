@@ -64,8 +64,8 @@ degree sequence vector of the hypergraph, $(d_1(x), \dots, d_{n}(x))$.
 ** Fixed point algorithm
 We will use the fixed point algorithm, with its geometric convergence rate, to
 compute the MLE for our beta model
-[cite:@https://doi.org/10.48550/arxiv.1407.1004]. From [[eq:2]] and [[eq:3]], we can
-compute the MLE as,
+[cite:@https://doi.org/10.48550/arxiv.1407.1004]. From equations [[eq:2]] and [[eq:3]],
+we can compute the MLE as,
 
 #+name: eq:4
 \begin{equation}
