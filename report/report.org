@@ -25,9 +25,9 @@ the CPU and the GPU.
 
 ** Statistical Model for uniform hypergraphs
 First, we define a hypergraph $H$ as a pair $(V, F)$ where $\left\{v_{1,} v_{2},
-\dots, v_{n \right\}}$ is a set of /nodes/ and $F$ is a family of non-empty subsets of V
+\dots, v_n \right\}$ is a set of /nodes/ and $F$ is a family of non-empty subsets of V
 of cardinality different from 1
-[cite:@https://doi.org/10.48550/arxiv.1407.1004]. Define $E=E_{n$} as the set of
+[cite:@https://doi.org/10.48550/arxiv.1407.1004]. Define $E=E_n$ as the set of
 all realized edges for a hypergraph on $n$ nodes. We can now write $x=(V,F)$ as
 the indicator vector, zero or one, $x = \left\{x_e, e \in E \right\}$ where $x_e
 = 1$ for $e \in F$ and $x_e \in E \setminus F$.
@@ -48,7 +48,7 @@ calculated to be,
 = \exp \left\{ \sum_{i \in V} d_i(x)\beta_i - \psi(\beta) \right\}
 \end{equation}
 
-where $e \in F$, $\tilde{\beta}_{i} = \sum_{i \in e} \beta_{i$},  $[n] \choose k$ be the set of
+where $e \in F$, $\tilde{\beta}_{i} = \sum_{i \in e} \beta_{i}$,  $[n] \choose k$ be the set of
 all subsets of size $k$ of the set $\left\{ 1, \dots , n\right\}$, $d_i$ is the
 degree of the node $i$, and the normalizing constant is,
 
@@ -59,7 +59,7 @@ degree of the node $i$, and the normalizing constant is,
 
 From [cite:@https://doi.org/10.48550/arxiv.1407.1004], it is shown that the
 /sufficient statistics for the k-uniform beta model/ are the entries of the
-degree sequence vector of the hypergraph, $(d_{}_{1 }(x), \dots , d_{n}(x))$.
+degree sequence vector of the hypergraph, $(d_1(x), \dots, d_{n}(x))$.
 
 ** Fixed point algorithm
 We will use the fixed point algorithm, with its geometric convergence rate, to
