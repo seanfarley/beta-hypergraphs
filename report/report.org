@@ -83,8 +83,6 @@ For the purposes of this report, we will talk about one particular part of the
 original =R= code (but removing some =NaN= checks), namely the part:
 
 #+begin_src R
-# Calculate the beta estimate for each beta[i]
-##### currently very slow #####
 for (i in 1:n){
   sum.q.beta=0
   for (j in 1:nrow(sets)){
