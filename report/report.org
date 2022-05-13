@@ -13,11 +13,12 @@
 
 * Introduction
 In this report, we'll examine the implementations of the maximum likelihood
-estimator (MLE) from [cite:@https://doi.org/10.48550/arxiv.1407.1004]. Motivated
-by social network models, Despina et al construct a statistical method for
-modeling social interactions. Here we concentrate on the first type of
-hypergraph called /uniform hypergraphs/, although initial coding experiments have
-produced similar speed ups for /general hypergraphs/.
+estimator (MLE) from Despina et al
+[cite:@https://doi.org/10.48550/arxiv.1407.1004]. Motivated by social network
+models, Despina et al construct a statistical method for modeling social
+interactions. Here we concentrate on the first type of hypergraph called /uniform
+hypergraphs/, although initial coding experiments have produced similar speed ups
+for /general hypergraphs/.
 
 Our goal in this report is to write an algorithm that calculates the MLE for the
 uniform hypergraph. By using vectorization, we can write code that runs on both
@@ -57,9 +58,9 @@ degree of the node $i$, and the normalizing constant is,
 \psi(\beta) = \sum_{e \in {[n] \choose k}} \log (1 + e^{\tilde{\beta}_{e}}).
 \end{equation}
 
-From [cite:@https://doi.org/10.48550/arxiv.1407.1004], it is shown that the
-/sufficient statistics for the k-uniform beta model/ are the entries of the
-degree sequence vector of the hypergraph, $(d_1(x), \dots, d_{n}(x))$.
+From Despina et al [cite:@https://doi.org/10.48550/arxiv.1407.1004], it is shown
+that the /sufficient statistics for the k-uniform beta model/ are the entries of
+the degree sequence vector of the hypergraph, $(d_1(x), \dots, d_{n}(x))$.
 
 ** Fixed point algorithm
 We will use the fixed point algorithm, with its geometric convergence rate, to
