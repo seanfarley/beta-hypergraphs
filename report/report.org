@@ -1,4 +1,4 @@
-#+title: Maximum Likelihood Estimation of $\beta$ models for random hypergraphs
+#+title: Vectorizing Maximum Likelihood Estimation of $\beta$ models for random hypergraphs
 #+date: Tuesday, May 3, 2022
 #+options: toc:nil
 #+bibliography: report.bib
