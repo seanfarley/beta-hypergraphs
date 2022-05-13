@@ -20,6 +20,21 @@ interactions. Here we concentrate on the first type of hypergraph called /unifor
 hypergraphs/, although initial coding experiments have produced similar speed ups
 for /general hypergraphs/.
 
+Recall that the likelihood function [cite:@casella2021statistical] is defined by,
+
+#+name: eq:likelihood
+\begin{equation}
+L(\theta | {\bf x}) = L(\theta_{1}, \dots, \theta_{k}|x_{1}, \dots, x_{n}) = \prod_{i=1}^{n} f(x_{i}| \theta_{1}, \dots, \theta_{k})
+\end{equation}
+
+for some probability distribution function, $f$. We will assume the likelihood
+function is differentiable and solve
+
+#+name: eq:mle
+\begin{equation}
+\frac{\partial}{\partial\theta_{i}} L(\theta | {\bf x}) = 0, \quad i=1, \dots, k
+\end{equation}
+
 Our goal in this report is to write an algorithm that calculates the MLE for the
 uniform hypergraph. By using vectorization, we can write code that runs on both
 the CPU and the GPU.
