@@ -202,11 +202,18 @@ for i in range(rows):
 #+end_src
 
 We no longer need to have the inner-loop (column) where we use an =if= statement
-to test for inclusion. That logic is done a priori (and much faster).
+to test for inclusion. That logic is done a priori (and much faster). For a
+hypergraph of $n=25, k=3$,
 
-#+begin_todo
-Insert timings for first pass at vectorization
-#+end_todo
+#+begin_src shell
+$ python3 beta_hypergraphs.py
+Running R-converted (for-loops) code (with n=25, k=3)
+beta_fixed_point_R took 257.1152 seconds
+Running python vectorized code (with n=25, k=3)
+beta_fixed_point took 0.4320 seconds
+#+end_src
+
+This is /quite/ the speed up.
 
 In Figure [[fig:first-pass-vec-op]], we can see in a visual way how this first pass
 is vectorized and sent to the processor as a chunk of memory to perform just a
