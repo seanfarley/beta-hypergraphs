@@ -13,9 +13,8 @@
 
 * Introduction
 In this report, we'll examine the implementations of the maximum likelihood
-estimator (MLE) from Despina et al
-[cite:@https://doi.org/10.48550/arxiv.1407.1004]. Motivated by social network
-models, Despina et al construct a statistical method for modeling social
+estimator (MLE) from Despina et al [cite:@stasi2014bhg]. Motivated by social
+network models, Despina et al construct a statistical method for modeling social
 interactions. Here we concentrate on the first type of hypergraph called /uniform
 hypergraphs/, although initial coding experiments have produced similar speed ups
 for /general hypergraphs/.
@@ -41,12 +40,11 @@ the CPU and the GPU.
 
 ** Statistical Model for uniform hypergraphs
 First, we define a hypergraph $H$ as a pair $(V, F)$ where $\left\{v_{1,} v_{2},
-\dots, v_n \right\}$ is a set of /nodes/ and $F$ is a family of non-empty subsets
-of V of cardinality different from 1
-[cite:@https://doi.org/10.48550/arxiv.1407.1004]. Define $E=E_n$ as the set of
-all realized edges for a hypergraph on $n$ nodes. We can now write $x=(V,F)$ as
-the indicator vector, zero or one, $x = \left\{x_e, e \in E \right\}$ where $x_e =
-1$ for $e \in F$ and $x_e \in E \setminus F$.
+\dots, v_n \right\}$ is a set of /nodes/ and $F$ is a family of non-empty subsets of V
+of cardinality different from 1 [cite:@stasi2014bhg]. Define $E=E_n$ as the set
+of all realized edges for a hypergraph on $n$ nodes. We can now write $x=(V,F)$
+as the indicator vector, zero or one, $x = \left\{x_e, e \in E \right\}$ where
+$x_e = 1$ for $e \in F$ and $x_e \in E \setminus F$.
 
 We use the Bernoulli probability of observing the hypergraph $x$,
 
@@ -73,15 +71,14 @@ degree of the node $i$, and the normalizing constant is,
 \psi(\beta) = \sum_{e \in {[n] \choose k}} \log (1 + e^{\tilde{\beta}_{e}}).
 \end{equation}
 
-From Despina et al [cite:@https://doi.org/10.48550/arxiv.1407.1004], it is shown
-that the /sufficient statistics for the k-uniform beta model/ are the entries of
-the degree sequence vector of the hypergraph, $(d_1(x), \dots, d_{n}(x))$.
+From Despina et al [cite:@stasi2014bhg], it is shown that the /sufficient
+statistics for the k-uniform beta model/ are the entries of the degree sequence
+vector of the hypergraph, $(d_1(x), \dots, d_{n}(x))$.
 
 ** Fixed point algorithm
 We will use the fixed point algorithm, with its geometric convergence rate, to
-compute the MLE for our beta model
-[cite:@https://doi.org/10.48550/arxiv.1407.1004]. From equations [[eq:2]] and [[eq:3]],
-we can compute the MLE as,
+compute the MLE for our beta model [cite:@stasi2014bhg]. From equations [[eq:2]] and
+[[eq:3]], we can compute the MLE as,
 
 #+name: eq:4
 \begin{equation}
