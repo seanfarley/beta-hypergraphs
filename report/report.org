@@ -241,9 +241,16 @@ beta = log(degrees) - log(sum_q)
 where =T= denotes the transpose, which is needed for the correct shape of
 matrix-vector multiplication.
 
-#+begin_todo
-Insert timings for second pass at vectorization
-#+end_todo
+#+begin_src shell
+$ python3 beta_hypergraphs.py
+Running python vectorized code (with n=25, k=3)
+beta_fixed_point took 0.4059 seconds
+#+end_src
+
+This is another speed-up but not as great as before. Quite normal as the
+algorithm is queuing rows and rows of data into the cache which is almost
+equivalent to doing a for-loop over the rows.
+
 
 * Miscellanea
 ** List comprehension
