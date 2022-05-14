@@ -269,14 +269,14 @@ To see what kind of speed up the GPU gives us, we need to increase the size of t
 problem. We set the size of $k=6$ for a size of $25 \choose 5$,
 
 #+begin_src shell
- python3 beta_hypergraphs.py
+$ python3 beta_hypergraphs.py
 Running R-converted (for-loops) code (with n=25, k=6)
 beta_fixed_point_R took *didn't complete after waiting two hours*
 
 Running python vectorized code (with n=25, k=6)
 beta_fixed_point took 18.9432 seconds
 
- python3 beta_hypergraphs_cupy.py
+$ python3 beta_hypergraphs_cupy.py
 Running cupy vectorized code (with n=25, k=6)
 beta_fixed_point took 1.7377 seconds
 #+end_src
@@ -296,14 +296,14 @@ indices = [[j for j in range(m) if i not in degrees_choose_k[j]]
 For a set the size of $25 \choose 5$ , we have the timings,
 
 #+begin_src shell
- python3 -m timeit -s 'import itertools; n=25; k=6; ind=[]; sets=list(itertools.combinations(range(n), k-1));' '
+$ python3 -m timeit -s 'import itertools; n=25; k=6; ind=[]; sets=list(itertools.combinations(range(n), k-1));' '
 for i in range(n):
     for j in range(len(sets)):
         if i not in sets[j]:
             ind.append(j)
 '
 2 loops, best of 5: 143 msec per loop
- python3 -m timeit -s 'import itertools; n=25; k=6; ind=[]; sets=list(itertools.combinations(range(n), k-1));' '[[j for j in range(len(sets)) if i not in sets[j]] for i in range(n)]'
+$ python3 -m timeit -s 'import itertools; n=25; k=6; ind=[]; sets=list(itertools.combinations(range(n), k-1));' '[[j for j in range(len(sets)) if i not in sets[j]] for i in range(n)]'
 2 loops, best of 5: 135 msec per loop
 #+end_src
 
@@ -321,7 +321,7 @@ a library for =Python= that provides a JIT compiler. This approach is best suite
 for non-vectorized code such as Listing [[listing:for-loop-python]].
 
 #+begin_src shell
- python3 beta_hypergraphs.py
+$ python3 beta_hypergraphs.py
 Running python vectorized code (with n=25, k=6)
 beta_fixed_point took 18.9432 seconds
 
