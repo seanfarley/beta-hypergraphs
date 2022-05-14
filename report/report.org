@@ -251,6 +251,43 @@ This is another speed-up but not as great as before. Quite normal as the
 algorithm is queuing rows and rows of data into the cache which is almost
 equivalent to doing a for-loop over the rows.
 
+*** GPU speedup
+A great, in fact one of the best, benefits to writing algorithms in a vectorized
+way is that it can seamlessly be run on a GPU. By using CuPy
+[cite:@cupy_learningsys2017], we can experiment with running on the GPU.
+
+#+name: fig:cpg-gpu
+#+caption: GPUs offer a consider speedup over traditional CPU cores
+#+attr_latex: :width 0.6\linewidth
+[[./cpu-gpu.png]]
+
+#+begin_src shell
+$ python3 beta_hypergraphs_cupy.py
+Running cupy vectorized code (with n=25, k=3)
+beta_fixed_point took 1.4462 seconds
+#+end_src
+
+This is =1s= slower than running the same algorithm on the CPU. This is a common
+situation with using GPUs. The reason is that there is an unavoidable overhead
+to transferring memory from the CPU to the GPU.
+
+To see what kind of speed up the GPU gives us, we need to increase the size of the
+problem. We set the size of $k=6$ for a size of $25 \choose 5$,
+
+#+begin_src shell
+ python3 beta_hypergraphs.py
+Running R-converted (for-loops) code (with n=25, k=6)
+beta_fixed_point_R took *didn't complete after waiting two hours*
+
+Running python vectorized code (with n=25, k=6)
+beta_fixed_point took 18.9432 seconds
+
+ python3 beta_hypergraphs_cupy.py
+Running cupy vectorized code (with n=25, k=6)
+beta_fixed_point took 1.7377 seconds
+#+end_src
+
+With this problem size, we can see the massive speedup that the GPU gave us.
 
 * Miscellanea
 ** List comprehension
