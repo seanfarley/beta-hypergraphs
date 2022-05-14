@@ -5,12 +5,6 @@
 #+latex_header: \usepackage{tikz}
 #+latex_header: \newcommand{\prob}{\mathbb{P}}
 
-#+begin_export latex
-\definecolor{purple}{rgb}{0.5, 0.0, 0.5}
-\newenvironment{todo}{{\bf TODO:} \sf \begingroup\color{purple}}{\endgroup}
-#+end_export
-
-
 * Introduction
 In this report, we'll examine the implementations of the maximum likelihood
 estimator (MLE) from Despina et al [cite:@stasi2014bhg]. Motivated by social
