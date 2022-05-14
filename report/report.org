@@ -326,8 +326,16 @@ To try this method in =Python=, we will use =Numba= [cite:@10.1145/2833157.28331
 a library for =Python= that provides a JIT compiler. This approach is best suited
 for non-vectorized code such as Listing [[listing:for-loop-python]].
 
-#+begin_todo
-insert jit timings
-#+end_todo
+#+begin_src shell
+ python3 beta_hypergraphs.py
+Running python vectorized code (with n=25, k=6)
+beta_fixed_point took 18.9432 seconds
+
+Running python jit'd code (with n=25, k=6)
+beta_fixed_point_R jit'd took 24.4585 seconds
+#+end_src
+
+This is a considerable speedup for not changing the original algorithm of
+for-loops.
 
 #+print_bibliography:
