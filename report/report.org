@@ -42,9 +42,9 @@ the CPU and the GPU.
 First, we define a hypergraph $H$ as a pair $(V, F)$ where $\left\{v_{1,} v_{2},
 \dots, v_n \right\}$ is a set of /nodes/ and $F$ is a family of non-empty subsets of V
 of cardinality different from 1 [cite:@stasi2014bhg]. Define $E=E_n$ as the set
-of all realized edges for a hypergraph on $n$ nodes. We can now write $x=(V,F)$
-as the indicator vector, zero or one, $x = \left\{x_e, e \in E \right\}$ where
-$x_e = 1$ for $e \in F$ and $x_e \in E \setminus F$.
+of all realizable edges for a hypergraph on $n$ nodes. We can now write
+$x=(V,F)$ as the indicator vector, zero or one, $x = \left\{x_e, e \in E \right\}$
+where $x_e = 1$ for $e \in F$ and $x_e \in E \setminus F$.
 
 We use the Bernoulli probability of observing the hypergraph $x$,
 
