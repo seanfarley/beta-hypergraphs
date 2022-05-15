@@ -6,3 +6,5 @@ tmp/
 .auctex-auto
 *.bbl
 *.pdf
+
+report/report.tex
