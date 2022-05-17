@@ -3,6 +3,7 @@
 #+options: toc:nil
 #+bibliography: report.bib
 #+latex_header: \usepackage{tikz}
+#+latex_header: \usetikzlibrary{positioning}
 #+latex_header: \newcommand{\prob}{\mathbb{P}}
 
 * Introduction
@@ -120,8 +121,31 @@ In both cases, =prod_exp_beta= and =exp_beta= are  vectors.
 #+caption: Looping accesses each part of the memory one at a time.
 #+name: fig:scalar-simd
 #+attr_latex: :placement [H]
-#+attr_latex: :width 0.4\linewidth
-[[./scalar-simd.png]]
+#+begin_figure
+\centering
+\begin{tikzpicture}[
+  node distance = .5cm,
+  mem/.style={
+    draw = black,
+    thin,
+    minimum size = 8mm,
+    fill=#1!20,
+}]
+
+\foreach \letter [count=\i from 1] in {x, y, z, w} {
+    \ifnum\i=1
+        \node (A\letter) [mem=yellow] {$A_{\letter}$};
+    \else
+        \node (A\letter) [mem=yellow, below of=A\prev, anchor=north] {$A_{\letter}$};
+    \fi
+    \node (plus\letter) [right =of A\letter]  {$+$};
+    \node (B\letter) [right =of plus\letter, mem=blue] {$B_{\letter}$};
+    \node (eq\letter) [right =of B\letter]  {$=$};
+    \node (C\letter) [right =of eq\letter, mem=red] {$C_{\letter}$};
+    \xdef\prev{\letter}
+}
+\end{tikzpicture}
+#+end_figure
 
 ** Vectorization
 For modern processors, chunks of memory can be sent, i.e. vectors, instead of
