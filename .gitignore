@@ -8,3 +8,4 @@ tmp/
 *.pdf
 
 report/report.tex
+report/report.html
