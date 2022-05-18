@@ -3,6 +3,7 @@
 #+options: toc:nil
 #+bibliography: report.bib
 #+latex_header: \usepackage{tikz}
+#+latex_header: \usetikzlibrary{matrix}
 #+latex_header: \usetikzlibrary{positioning}
 #+latex_header: \usetikzlibrary{shapes}
 #+latex_header: \newcommand{\prob}{\mathbb{P}}
@@ -297,10 +298,79 @@ A great, in fact one of the best, benefits to writing algorithms in a vectorized
 way is that it can seamlessly be run on a GPU. By using CuPy
 [cite:@cupy_learningsys2017], we can experiment with running on the GPU.
 
+#+TODO: [H] didn't work for begin_figure
+
 #+name: fig:cpg-gpu
 #+caption: GPUs offer a consider speedup over traditional CPU cores
-#+attr_latex: :width 0.6\linewidth
-[[./cpu-gpu.png]]
+\begin{figure}[H]
+\centering
+
+\begin{tikzpicture}
+  \matrix[
+    draw,
+    matrix of nodes,
+    row sep=.1cm,
+    column sep=.1cm,
+    nodes={
+        rectangle, draw=black, minimum height=2.25em, minimum width=2.25em,
+        anchor=center, %align=center, %text width=2em,
+        fill=blue!40,
+    }
+  ] (CPU) {
+    Core 1 & Core 3 \\
+    Core 2 & Core 4 \\
+  };
+
+  \node[
+      above=3mm of CPU,
+      anchor=south,
+      text width=3cm,
+      align=center
+  ] {
+    CPU\\ with four cores
+  };
+
+  \matrix[
+    draw,
+    right=1cm of CPU,
+    matrix of nodes,
+    row sep=.1cm,
+    column sep=.1cm,
+    nodes in empty cells,
+    nodes={
+        rectangle, draw=black, %minimum height=2.25em, minimum width=2.25em,
+        anchor=center, %align=center, %text width=2em,
+        fill=red!40,
+    }
+  ] (GPU) {
+     & & & & & & & & & & & & & & & & \\
+     & & & & & & & & & & & & & & & & \\
+     & & & & & & & & & & & & & & & & \\
+     & & & & & & & & & & & & & & & & \\
+     & & & & & & & & & & & & & & & & \\
+     & & & & & & & & & & & & & & & & \\
+     & & & & & & & & & & & & & & & & \\
+     & & & & & & & & & & & & & & & & \\
+     & & & & & & & & & & & & & & & & \\
+     & & & & & & & & & & & & & & & & \\
+     & & & & & & & & & & & & & & & & \\
+     & & & & & & & & & & & & & & & & \\
+     & & & & & & & & & & & & & & & & \\
+     & & & & & & & & & & & & & & & & \\
+     & & & & & & & & & & & & & & & & \\
+     & & & & & & & & & & & & & & & & \\
+  };
+
+\node[
+      above=3mm of GPU,
+      anchor=south,
+      text width=6cm,
+      align=center
+  ] {
+    GPU\\ with hundreds of cores
+  };
+\end{tikzpicture}
+\end{figure}
 
 #+begin_src shell
 $ python3 beta_hypergraphs_cupy.py
