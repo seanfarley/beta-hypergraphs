@@ -92,8 +92,11 @@ $\hat{\beta}_{(l + 1)} = \phi(\hat{\beta}_{(l)})$  for $l = 0, 1, 2, \dots$.
 ** Initial =R= code
 We will take a look at one particular hot spot of code that will generalize to
 For the purposes of this report, we will talk about one particular part of the
-original =R= code (but removing some =NaN= checks), namely the part:
+original =R= code (but removing some =NaN= checks), namely the part in Listing
+[[listing:for-loop-r]].
 
+#+caption: R code for our MLE calculation
+#+name: listing:for-loop-r
 #+begin_src R
 for (i in 1:n){
   sum.q.beta=0
@@ -107,7 +110,7 @@ for (i in 1:n){
 }
 #+end_src
 
-Writing this in a pseudo-=Python= way, we have:
+Writing this in a pseudo-=Python= way, we have Listing [[listing:for-loop-python]].
 
 #+caption: Pseudo code for our MLE calculation
 #+name: listing:for-loop-python
@@ -120,11 +123,11 @@ for i in range(rows):
         beta[i] = log(degrees[i]) - log(sum_q)
 #+end_src
 
-In both cases, =prod_exp_beta= and =exp_beta= are  vectors.
+In both cases, =prod_exp_beta= and =exp_beta= are vectors accessed in a for-loop
+one-by-one which is visualized in Figure [[fig:scalar-simd]].
 
 #+caption: Looping accesses each part of the memory one at a time.
 #+name: fig:scalar-simd
-#+attr_latex: :placement [H]
 #+begin_figure
 \centering
 \begin{tikzpicture}[
@@ -153,7 +156,8 @@ In both cases, =prod_exp_beta= and =exp_beta= are  vectors.
 
 ** Vectorization
 For modern processors, chunks of memory can be sent, i.e. vectors, instead of
-individual scalars. Figure [[fig:scalar-simd]] can then be written as,
+individual scalars. Figure [[fig:scalar-simd]] can then be visualized as Figure
+[[fig:vector-simd]].
 
 #+caption: Vectorized operation reducing the operations from 4 to 1.
 #+name: fig:vector-simd
@@ -204,10 +208,10 @@ array([ 4,  7, 12])
 #+end_src
 
 A key takeaway from this code snippet should be that no memory was copied just a
-special "view" of a subset of our original array. This will be an efficient way
-to avoid using an =if= statement in our computationally expensive core. From our
-original python psuedo-code, the strategy will be to calculate the indices
-/before/ vectorizing.
+special "view" of a subset of our original array, visualized in [[fig:fancy-index]].
+This will be an efficient way to avoid using an =if= statement in our
+computationally expensive core. From our original python psuedo-code, the
+strategy will be to calculate the indices /before/ vectorizing.
 
 #+begin_src python
 indices = []
@@ -219,7 +223,6 @@ for i in range(n):
 
 #+caption: A "fancy indexing" of an array, which in =Python= is written as =a[0, 2, 5, 6]=
 #+name: fig:fancy-index
-#+attr_latex: :placement [H]
 #+begin_figure
 \centering
 \begin{tikzpicture}
@@ -403,11 +406,10 @@ equivalent to doing a for-loop over the rows.
 *** GPU speedup
 A great, in fact one of the best, benefits to writing algorithms in a vectorized
 way is that it can seamlessly be run on a GPU. By using CuPy
-[cite:@cupy_learningsys2017], we can experiment with running on the GPU.
+[cite:@cupy_learningsys2017], we can experiment with running on the GPU. A
+simple visualization of a CPU vs GPU can be seen in Figure [[fig:cpu-gpu]].
 
-#+TODO: [H] didn't work for begin_figure
-
-#+name: fig:cpg-gpu
+#+name: fig:cpu-gpu
 #+caption: GPUs offer a consider speedup over traditional CPU cores
 \begin{figure}[H]
 \centering
