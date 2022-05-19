@@ -294,7 +294,7 @@ In Figure [[fig:first-pass-vec-op]], we can see in a visual way how this first p
 is vectorized and sent to the processor as a chunk of memory to perform just a
 few operations.
 
-#+caption: Vectorization of computing =sum_q= where =pb= is =prod_beta= and =eb= is =exp_beta=
+#+caption: Vectorization of computing =sum_q= where =x= is =prod_beta= and =y= is =exp_beta=
 #+name: fig:first-pass-vec-op
 #+attr_latex: :placement [H]
 #+begin_figure
@@ -315,7 +315,7 @@ mem/.style = {
     },
 }
 ]
-\matrix[mem=green] (X) {
+\matrix[mem=blue] (X_1) {
     $x_0$ \\
     $x_1$ \\
     $x_2$ \\
@@ -323,9 +323,19 @@ mem/.style = {
     $x_4$ \\
   };
 
-\node[memsize, right of=X] (div) {$\div$};
+\node[memsize, right of=X_1] (div) {$\div$};
 
-\matrix[mem=blue, right=5mm of div, left delimiter=(,] (Y) {
+\matrix[mem=blue, right=5mm of div, left delimiter=(,] (X_2) {
+    $x_0$ \\
+    $x_1$ \\
+    $x_2$ \\
+    $x_3$ \\
+    $x_4$ \\
+  };
+
+\node[memsize, right of=X_2] (times) {$*$};
+
+\matrix[mem=red, right of=times] (Y) {
     $y_0$ \\
     $y_1$ \\
     $y_2$ \\
@@ -333,17 +343,7 @@ mem/.style = {
     $y_4$ \\
   };
 
-\node[memsize, right of=Y] (times) {$*$};
-
-\matrix[mem=red, right of=times] (Z) {
-    $z_0$ \\
-    $z_1$ \\
-    $z_2$ \\
-    $z_3$ \\
-    $z_4$ \\
-  };
-
-\node[memsize, right of=Z] (plus) {$+$};
+\node[memsize, right of=Y] (plus) {$+$};
 
 \matrix[mem=purple, right of=plus, right delimiter=), nodes in empty cells] (ones) {
      1 \\
@@ -358,7 +358,7 @@ mem/.style = {
 
 \node[memsize, right=5mm of ones] (equals) {$=$};
 
-\matrix[mem=yellow, right of=equals, right delimiter=\}] (result) {
+\matrix[mem=green, right of=equals, right delimiter=\}] (result) {
     $r_0$ \\
     $r_1$ \\
     $r_2$ \\
@@ -366,10 +366,10 @@ mem/.style = {
     $r_4$ \\
   };
 
-\draw (result-2-1.east) node[fill=yellow!5,transform shape, rotate=-90, yshift=9mm, xshift=8mm] {reduce by sum};
+\draw (result-2-1.east) node[fill=green!5,transform shape, rotate=-90, yshift=9mm, xshift=8mm] {reduce by sum};
 
 \node[memsize, right=12mm of result] (reduced_eq) {$=$};
-\node[memsize, fill=yellow!40, right=1mm of reduced_eq] (reduced) {$r$};
+\node[memsize, fill=green!40, right=1mm of reduced_eq] (reduced) {$r$};
 \end{tikzpicture}
 #+end_figure
 
