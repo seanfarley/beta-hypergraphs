@@ -297,7 +297,81 @@ few operations.
 #+caption: Vectorization of computing =sum_q= where =pb= is =prod_beta= and =eb= is =exp_beta=
 #+name: fig:first-pass-vec-op
 #+attr_latex: :placement [H]
-[[./first-pass-vec-op.pdf]]
+#+begin_figure
+\centering
+\begin{tikzpicture}[
+memsize/.style = {
+rectangle,
+minimum height=2.25em,
+ minimum width=2.25em,
+},
+mem/.style = {
+    matrix of nodes,
+    nodes={
+        draw=black,
+        memsize,
+        anchor=center,
+        fill=#1!40,
+    },
+}
+]
+\matrix[mem=green] (X) {
+    $x_0$ \\
+    $x_1$ \\
+    $x_2$ \\
+    $x_3$ \\
+    $x_4$ \\
+  };
+
+\node[memsize, right of=X] (div) {$\div$};
+
+\matrix[mem=blue, right=5mm of div, left delimiter=(,] (Y) {
+    $y_0$ \\
+    $y_1$ \\
+    $y_2$ \\
+    $y_3$ \\
+    $y_4$ \\
+  };
+
+\node[memsize, right of=Y] (times) {$*$};
+
+\matrix[mem=red, right of=times] (Z) {
+    $z_0$ \\
+    $z_1$ \\
+    $z_2$ \\
+    $z_3$ \\
+    $z_4$ \\
+  };
+
+\node[memsize, right of=Z] (plus) {$+$};
+
+\matrix[mem=purple, right of=plus, right delimiter=), nodes in empty cells] (ones) {
+     1 \\
+     \\
+     \\
+     \\
+     \\
+  };
+
+\draw[->, very thick, purple!70] (ones-1-1) -- (ones-5-1.center);
+\draw (ones-3-1.east) node[fill=purple!5,transform shape, rotate=-90] {broadcast};
+
+\node[memsize, right=5mm of ones] (equals) {$=$};
+
+\matrix[mem=yellow, right of=equals, right delimiter=\}] (result) {
+    $r_0$ \\
+    $r_1$ \\
+    $r_2$ \\
+    $r_3$ \\
+    $r_4$ \\
+  };
+
+\draw (result-2-1.east) node[fill=yellow!5,transform shape, rotate=-90, yshift=9mm, xshift=8mm] {reduce by sum};
+
+\node[memsize, right=12mm of result] (reduced_eq) {$=$};
+\node[memsize, fill=yellow!40, right=1mm of reduced_eq] (reduced) {$r$};
+\end{tikzpicture}
+#+end_figure
 
 This is the /crux/ of how we speed up this calculation.
 
